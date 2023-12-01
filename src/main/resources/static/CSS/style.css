@@ -1,0 +1,264 @@
+
+h1 {
+	margin-bottom: 0px;
+	padding-left: 20px;
+	border-left: 5px solid #009F98;
+}
+
+@media ( max-width : 991px) {
+	h1 {
+		margin-top: 5%;
+	}
+}
+
+/* ハンバーガーメニュー */
+.ham {
+	background-color: #A4DEE0;
+}
+
+/* サイドバー */
+#sidebar {
+	background-color: #A4DEE0;
+	min-height: 100vh;
+}
+
+body>#sidebar {
+	height: auto;
+}
+
+.nav-link {
+	color: rgb(99, 99, 99);
+}
+
+.disabled .nav-link {
+	padding-bottom: 0px;
+	border-radius: 0px;
+	border-bottom: 1px solid;
+	color: black;
+}
+
+#sidebar .nav-pills .nav-link.active {
+	border-radius: 0px;
+	color: white;
+	background-color: lightseagreen;
+}
+
+.nav-item:hover {
+	background-color: white;
+}
+
+.nav-item:hover .nav-link {
+	color: rgb(148, 147, 147);
+}
+
+/* offcanvas */
+.offcanvas-body .nav-item:hover {
+	background-color: #F2F2F2;
+}
+
+.offcanvas-body .disabled {
+	margin-top: 5px;
+}
+
+.dropdown {
+	position: fixed;
+	bottom: 80px;
+}
+
+/* 各ボタン */
+.btn {
+	margin-top: 16px;
+	margin-bottom: 10px;
+	padding: 0px;
+}
+
+/* 各一覧ページ　editボタン */
+.btn-edit {
+	width: 60px;
+	height: 30px;
+	font-size: 16px;
+	color: lightseagreen;
+	background-color: white;
+	border: thin solid lightseagreen;
+	border-radius: 15px;
+}
+
+/* 各一覧ページ　deleボタン */
+.btn-remove {
+	width: 60px;
+	height: 30px;
+	font-size: 16px;
+	color: white;
+	background-color: lightseagreen;
+	border: none;
+	border-radius: 15px;
+}
+
+/* 各一覧ページ　Modal内「はい」ボタン */
+.btn-yes{
+	width: 70px;
+	height: 30px;
+	margin-left: 50px;
+	font-size: 16px;
+	color: white;
+	background-color: tomato;
+	border: none;
+	border-radius: 15px;
+}
+
+/* 一覧Modal内「キャンセル」ボタン */
+.btn-no{
+	width: 140%;
+	height: 30px;
+	font-size: 16px;
+    color: lightseagreen;
+	background-color: white;
+	border: solid 1px lightseagreen;
+	border-radius: 15px;
+}
+
+/* 新規登録ボタン */
+.btn-createNew, .back, .btn-dele {
+	width: 120px;
+	height: 40px;
+	background-color: white;
+	color: lightseagreen;
+	border: lightseagreen solid 2px;
+	border-radius: 15px;
+}
+
+/* 行・テーブル追加ボタン */
+.btn-clone {
+	width: 60px;
+	height: 30px;
+	font-size: 16px;
+	color: lightseagreen;
+	background-color: white;
+	border: thin solid lightseagreen;
+	border-radius: 15px;
+}
+
+/* 保存ボタン */
+.btn-save {
+	width: 120px;
+	height: 40px;
+	color: white;
+	background-color: lightseagreen;
+	border: none;
+	border-radius: 15px;
+}
+
+/* 更新ボタン */
+.btn-update {
+	width: 120px;
+	height: 40px;
+	color: white;
+	background-color: lightseagreen;
+	border: none;
+	border-radius: 15px;
+}
+
+/* listOrderページ
+edit / dele ボタン */
+.btn-list-edit-dele {
+	width: 110px;
+	height: 30px;
+	font-size: 16px;
+	color: white;
+	background-color: lightseagreen;
+	border: none;
+	border-radius: 15px;
+}
+
+/* detaileページh1下
+編集 ／ - 削除ボタン */
+.btn-detail-edit-dele {
+	width: 160px;
+	height: 40px;
+	background-color: white;
+	color: lightseagreen;
+	border: lightseagreen solid 2px;
+	border-radius: 15px;
+}
+
+/* addIngredient/editIngredientページ内
+アレルギー項目、追加・削除ボタン */
+.btn-allergyMinus, .btn-allergyPlus {
+	width: 35px;
+	height: 30px;
+	background-color: white;
+	color: lightseagreen;
+	border: lightseagreen solid 2px;
+	border-radius: 12px;
+}
+
+/* 更新者・更新日時情報 */
+.updatedatail {
+	text-align: right;
+}
+
+
+/* ページネーション */
+.pagination {
+	justify-content: center;
+	margin-top: 16px;
+}
+
+.pagination .page-item {
+	margin: 0 5px;
+}
+
+.pagination .page-item.active .page-link {
+	background-color: lightseagreen;
+	border-color: lightseagreen;
+	color: white;
+}
+
+
+/* detailページ使用食材テーブル連番:start*/
+table.addOrderTableBelow tbody tr, table.detailOrderTableBelow tbody tr
+	{
+	counter-increment: row-counter;
+}
+
+table.addOrderTableBelow tbody, table.detailOrderTableBelow tbody {
+	counter-reset: row-counter;
+}
+
+
+table.addOrderTableBelow tbody tr th.num::before, table.detailOrderTableBelow tbody tr th.num::before
+	{
+	content: counter(row-counter);
+}
+/* 詳細ページ使用食材テーブル連番:end*/
+
+
+/* ingredient 食材テーブル */
+/* ホバー効果を除外した行 */
+table tr:hover th:not([rowspan="15"]), table tr:hover td:not([rowspan="15"])
+	{
+	
+	background-color: #f0f0f0;
+	cursor: pointer;
+	
+}
+
+/* 食材テーブル内 アレルギー項目連番:start */
+.addIngredient {
+	counter-reset: allergyNum;
+}
+
+.addIngredient tr td.agNum::before {
+	content: "アレルギー " counter(allergyNum);
+}
+
+.addIngredient tr td.agNum {
+	counter-increment: allergyNum;
+}
+/* 食材テーブル内 アレルギー項目連番:end */
+
+
+/* エラーメッセージ */
+.error-message{
+	color: tomato;
+}

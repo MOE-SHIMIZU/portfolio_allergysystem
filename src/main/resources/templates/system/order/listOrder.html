@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{system/parts/common :: html_head()}"></head>
+
+<body>
+
+	<!-- SP版ハンバーガーメニュー -->
+	<th:block th:replace="~{system/parts/common :: hamburgerMenu()}"></th:block>
+
+	<div class="container-fluid">
+		<!-- サイドメニュー（PC版） -->
+		<div th:replace="~{system/parts/common :: sideMenu()}" class="row"></div>
+
+		<!-- メインコンテンツ -->
+		<div class="container-fluid">
+			<div class="row">
+
+				<main class="col-lg-9 p-lg-5 offset-lg-3">
+					<div class="container">
+
+						<h1 class="">商品一覧</h1>
+
+						<div th:if="${statusMessage}" class="alert alert-warning mt-3 mb-0" role="alert">
+							[[${statusMessage}]]</div>
+
+						<div class="btn d-flex justify-content-start">
+							<a th:href="@{/order/add}">
+								<button class="btn-createNew">＋ 新規登録</button>
+							</a>
+						</div>
+
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>商品名</th>
+										<th>該当アレルギー</th>
+										<th class="col-sm-0 d-none d-sm-table-cell">最新更新者</th>
+										<th class="col-sm-0 d-none d-sm-table-cell">最新更新日時</th>
+										<th>操作</th>
+
+
+									</tr>
+								</thead>
+								<tbody class="table-group-divider">
+									<tr th:each="order : ${ordereListByPage}">
+										<th>[[${order.id}]]</th>
+										<td><a th:href="@{/order/detail/{id}(id=${order.id})}">[[${order.name}]]</a>
+										</td>
+										<td>[[${order.allergyAndIngredient}]]</td>
+										<td class="col-sm-0 d-none d-sm-table-cell">user</td>
+										<td class="col-sm-0 d-none d-sm-table-cell">
+											[[${#dates.format(order.created,'yy/MM/dd/E HH:mm:ss')}]]</td>
+										<td><a th:href="@{/order/edit/{id}(id=${order.id})}"><button type="button"
+													class="btn-list-edit-dele">edit/dele</button></a>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- 2 ページ以上の場合、ページネーションを表示-->
+						<div
+							th:replace="~{system/parts/pagination :: pagination(${totalPages}, ${currentPage}, 'order')}">
+						</div>
+					</div>
+				</main>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 右側から表示されるOffcanvasメニュー -->
+	<div th:replace="~{system/parts/common :: offcanvasMenu()}"></div>
+
+	<th:block th:replace="~{system/parts/common :: javascripts()}"></th:block>
+
+</body>
+
+</html>

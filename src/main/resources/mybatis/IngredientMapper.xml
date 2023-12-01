@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.IngredientMapper">
+
+	<select id="selectAll" resultType="Ingredient">
+		SELECT
+		ingredient.id,
+		ingredient.name,
+		food_cat.name AS food_cat_name,
+		IFNULL(GROUP_CONCAT(DISTINCT allergy.name ORDER BY allergy.id
+		SEPARATOR ' / '), 'no allergy') AS
+		allergy_name,
+		ingredient.created
+		FROM
+		ingredient
+		LEFT JOIN ingredients_allergies ON ingredient.id =
+		ingredients_allergies.ingredient_id
+		LEFT JOIN allergy ON allergy.id =
+		ingredients_allergies.allergy_id
+		LEFT JOIN food_cat ON food_cat.id =
+		ingredient.food_cat_id
+		GROUP BY ingredient.id, ingredient.name,
+		food_cat.name
+		ORDER BY ingredient.id ASC;
+	</select>
+
+	<select id="selectById" parameterType="int"></select>
+
+	<delete id="deleteById" parameterType="Ingredient">
+		DELETE FROM ingredient
+		WHERE id = #{id}
+	</delete>
+	
+	<update id="update" parameterType="Ingredient"></update>
+
+	<!-- selectフォーム用のList -->
+	<select id="selectIngredientFoodCat" resultType="Ingredient">
+		SELECT
+		ingredient.id,
+		ingredient.name,
+		ingredient.food_cat_id
+		FROM ingredient
+		ORDER BY ingredient.id ASC
+	</select>
+
+	<!-- 一括投入用 -->
+	<insert id="insert" parameterType="Ingredient"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ingredient(name, kana,
+		food_cat_id)
+		VALUES(#{name}, #{kana}, #{foodCatId})
+	</insert>
+
+	<!-- ページネーション -->
+	<select id="count" resultType="long">
+		SELECT COUNT(*) FROM ingredient
+	</select>
+
+	<!-- ページネーション -->
+	<select id="selectLimited" resultType="Ingredient">
+		SELECT
+		ingredient.id,
+		ingredient.name,
+		food_cat.name AS food_cat_name,
+		IFNULL(GROUP_CONCAT(DISTINCT allergy.name ORDER BY allergy.id
+		SEPARATOR ' / '), 'no allergy') AS
+		allergy_name,
+		ingredient.created
+		FROM
+		ingredient
+		LEFT JOIN ingredients_allergies ON ingredient.id =
+		ingredients_allergies.ingredient_id
+		LEFT JOIN allergy ON allergy.id =
+		ingredients_allergies.allergy_id
+		LEFT JOIN food_cat ON food_cat.id =
+		ingredient.food_cat_id
+		GROUP BY ingredient.id, ingredient.name,
+		food_cat.name
+		ORDER BY ingredient.id ASC
+		LIMIT #{offset},#{numPerPage}
+	</select>
+
+</mapper>

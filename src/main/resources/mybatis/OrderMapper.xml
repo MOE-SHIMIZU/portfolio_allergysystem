@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.app.mapper.OrderMapper">
+
+	<select id="selectAll" resultType="Order">
+		SELECT
+		orders.id, orders.name, orders.kana, orders.price,
+		orders.img, orders.note, orders.created,
+		IFNULL(
+		GROUP_CONCAT(
+		DISTINCT CONCAT(
+		allergy.name, ' : ',
+		(
+		SELECT
+		GROUP_CONCAT(ingredient.name SEPARATOR ',')
+		FROM detail
+		JOIN ingredient ON detail.ingredient_id = ingredient.id
+		JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
+		WHERE detail.orders_id = orders.id
+		AND ingredients_allergies.allergy_id = allergy.id
+		)
+		) SEPARATOR
+		' | ' ), 'No Allergy') AS
+		allergy_and_ingredient,
+		GROUP_CONCAT(ingredient.name SEPARATOR '\n') AS ingredientName
+		FROM orders
+		JOIN detail ON orders.id = detail.orders_id
+		LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
+		LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
+		LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
+		GROUP BY orders.id,
+		orders.name, orders.kana, orders.img, orders.note, orders.created
+		ORDER BY orders.id ASC;
+	</select>
+
+	<select id="selectById" parameterType="int" resultType="Order">
+	
+		SELECT
+		orders.id, orders.name, orders.kana, orders.price,
+		orders.img, orders.note, orders.created,
+		IFNULL(
+		GROUP_CONCAT(
+		DISTINCT CONCAT(
+		allergy.name, ' : ',
+		(
+		SELECT
+		GROUP_CONCAT(ingredient.name SEPARATOR ',')
+		FROM detail
+		JOIN ingredient ON detail.ingredient_id = ingredient.id
+		JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
+		WHERE detail.orders_id = orders.id
+		AND ingredients_allergies.allergy_id = allergy.id
+		)
+		) SEPARATOR
+		' | ' ), 'No Allergy') AS
+		allergy_and_ingredient,
+		GROUP_CONCAT(ingredient.name SEPARATOR '\n') AS ingredientName
+		FROM orders
+		JOIN detail ON orders.id = detail.orders_id
+		LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
+		LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
+		LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
+		WHERE orders.id = #{id}
+		GROUP BY orders.id,
+		orders.name, orders.kana, orders.img, orders.note, orders.created
+		ORDER BY orders.id ASC;
+	
+	</select>
+
+	<delete id="deleteById" parameterType="int"></delete>
+
+	<insert id="insert" parameterType="Order"
+		useGeneratedKeys="true" keyProperty="id">
+
+		INSERT INTO orders (name, kana,
+		price, img, note)
+		VALUES(#{name}, #{kana}, #{price}, #{img}, #{note})
+
+	</insert>
+
+
+	<update id="update" parameterType="Order"></update>
+
+
+	<!-- detai用 -->
+	<select id="selectOrderDetailById" parameterType="int"
+		resultType="Order">
+
+		SELECT
+		ingredient.name AS ingredient_name,
+		IFNULL(GROUP_CONCAT(allergy.name SEPARATOR ', '), 'no allergy') AS allergies
+		FROM orders
+		JOIN detail ON orders.id = detail.orders_id
+		JOIN ingredient ON detail.ingredient_id = ingredient.id
+		LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
+		WHERE orders.id = #{id}
+		GROUP BY ingredient.id
+
+	</select>
+
+	<!-- ページネーション -->
+	<select id="count" resultType="long">
+		SELECT COUNT(*) FROM orders
+	</select>
+
+	<!-- ページネーション -->
+	<select id="selectLimited" resultType="Order">
+	
+		SELECT
+		orders.id, orders.name, orders.kana, orders.price,
+		orders.img, orders.note, orders.created,
+		IFNULL(
+		GROUP_CONCAT(
+		DISTINCT CONCAT(
+		allergy.name, ' : ',
+		(
+		SELECT
+		GROUP_CONCAT(ingredient.name SEPARATOR ',')
+		FROM detail
+		JOIN ingredient ON detail.ingredient_id = ingredient.id
+		JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
+		WHERE detail.orders_id = orders.id
+		AND ingredients_allergies.allergy_id = allergy.id
+		)
+		) SEPARATOR
+		' | ' ), 'No Allergy') AS
+		allergy_and_ingredient,
+		GROUP_CONCAT(ingredient.name SEPARATOR '\n') AS ingredientName
+		FROM orders
+		JOIN detail ON orders.id = detail.orders_id
+		LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
+		LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
+		LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
+		GROUP BY orders.id,
+		orders.name, orders.kana, orders.img, orders.note, orders.created
+		ORDER BY orders.id ASC
+		LIMIT #{offset}, #{numPerPage}
+		
+	</select>
+
+
+</mapper>

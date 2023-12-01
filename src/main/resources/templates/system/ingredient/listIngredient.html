@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{system/parts/common :: html_head()}"></head>
+
+<body>
+
+	<!-- SP版ハンバーガーメニュー -->
+	<th:block th:replace="~{system/parts/common :: hamburgerMenu()}"></th:block>
+
+	<div class="container-fluid">
+		<!-- サイドメニュー（PC版） -->
+		<div th:replace="~{system/parts/common :: sideMenu()}" class="row"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- メインコンテンツ -->
+				<main class="col-lg-9 p-lg-5 offset-lg-3">
+					<div class="container">
+
+						<h1 class=""> 食材一覧</h1>
+
+						<div th:if="${statusMessage}" class="alert alert-warning mt-3 mb-0" role="alert">
+							[[${statusMessage}]]</div>
+
+						<div class="btn">
+							<a th:href="@{/ingredient/add}">
+								<button class="btn-createNew">＋ 新規登録</button>
+							</a>
+						</div>
+
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>食材名</th>
+										<th>食品カテゴリー</th>
+										<th>該当アレルギー</th>
+										<th class="col-sm-0 d-none d-sm-table-cell">最新更新者</th>
+										<th class="col-sm-0 d-none d-sm-table-cell">最新更新日時</th>
+										<th colspan="2">操作</th>
+									</tr>
+								</thead>
+
+								<tbody class="table-group-divider">
+									<tr th:each="ingredient :${ingredientListByPage}">
+										<th>[[${ingredient.id}]]</th>
+										<td>[[${ingredient.name}]]</td>
+										<td>[[${ingredient.foodCatName}]]</td>
+										<td>[[${ingredient.allergyName}]]</td>
+										<td class="col-sm-0 d-none d-sm-table-cell">user</td>
+										<td class="col-sm-0 d-none d-sm-table-cell">
+											[[${#dates.format(ingredient.created, 'yy/MM/dd/E HH:mm:ss')}]]</td>
+										<td><a th:href="@{/ingredient/edit/{id}(id=${ingredient.id})}"><button
+													type="button" class="btn-edit">edit</button></a>
+										</td>
+										<td>
+											<!-- modal -->
+											<button type="button" class="btn-remove delete" data-bs-toggle="modal"
+												th:href="@{/ingredient/delete/{id}(id=${ingredient.id})}"
+												data-bs-target="#exampleModal" th:data-name="${ingredient.name}">
+												dele
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- 2 ページ以上の場合、ページネーションを表示:start -->
+						<div
+							th:replace="~{system/parts/pagination :: pagination(${totalPages}, ${currentPage}, 'ingredient')}">
+						</div>
+
+					</div>
+				</main>
+
+			</div>
+		</div>
+
+	</div>
+
+	<!-- 右側から表示されるOffcanvasメニュー -->
+	<div th:replace="~{system/parts/common :: offcanvasMenu()}"></div>
+	<!-- Modal -->
+	<div th:replace="~{system/parts/common :: model('食材削除')}"></div>
+	<!-- jquery-3.6.0.min.js/bootstrap.bundle.min.js -->
+	<th:block th:replace="~{system/parts/common :: javascripts()}"></th:block>
+	<script>
+		$(".delete").click(function () {
+			$("#delete-name").text($(this).attr("data-name"));
+			$("#delete-yes").attr("href", $(this).attr("href"));
+		});
+	</script>
+</body>
+
+</html>

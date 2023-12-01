@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{system/parts/common :: html_head()}"></head>
+
+<body>
+
+	<!-- SP版ハンバーガーメニュー -->
+	<th:block th:replace="~{system/parts/common :: hamburgerMenu()}"></th:block>
+
+	<div class="container-fluid">
+		<!-- サイドメニュー（PC版） -->
+		<div th:replace="~{system/parts/common :: sideMenu()}" class="row"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- メインコンテンツ -->
+				<main class="col-lg-9 p-lg-5 offset-lg-3">
+					<div class="container">
+
+						<h1 class="">アレルギー編集</h1>
+
+						<!-- エラーメッセージを表示 -->
+						<div th:if="${errorMessage}" class="mt-4">[[${errorMessage}]]</div>
+
+						<div class="text-end mt-4">更新者：user　更新日時：[[${#dates.format(allergy.created,
+							'yy/MM/dd/E HH:mm:ss')}]]</div>
+
+						<form action="#" method="post" enctype="multipart/form-data" th:object="${allergy}">
+							<div class="table-responsive">
+
+								<table class="table table-striped table-hover">
+									<tr>
+										<th>ID</th>
+										<td colspan="">[[*{id}]]</td>
+									</tr>
+									<tr>
+										<th>項目名</th>
+										<td colspan="">
+											<input type="text" th:field="*{name}" class="form-control">
+											<small class="error-message" th:errors="*{name}"></small>
+										</td>
+									</tr>
+
+									<tr>
+										<th>カナ</th>
+										<td colspan="">
+											<input type="text" th:field="*{kana}" class="form-control">
+											<small class="error-message" th:errors="*{kana}"></small>
+										</td>
+									</tr>
+
+								</table>
+
+								<div class="text-center my-5">
+									<input type="submit" value="更新" class="btn-update">
+								</div>
+
+							</div>
+					</div>
+					</form>
+				</main>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 右側から表示されるOffcanvasメニュー -->
+	<div th:replace="~{system/parts/common :: offcanvasMenu()}"></div>
+	<th:block th:replace="~{system/parts/common :: javascripts()}"></th:block>
+
+</body>
+
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{system/parts/common :: html_head()}"></head>
+
+<body>
+
+	<!-- SP版ハンバーガーメニュー -->
+	<th:block th:replace="~{system/parts/common :: hamburgerMenu()}"></th:block>
+
+	<div class="container-fluid">
+		<!-- サイドメニュー（PC版） -->
+		<div th:replace="~{system/parts/common :: sideMenu()}" class="row"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- メインコンテンツ -->
+				<main class="col-lg-9 p-lg-5 offset-lg-3">
+					<form action="#" method="post" enctype="multipart/form-data" th:object="${ingredientsForm}">
+						<div class="container">
+
+							<h1 class="">食材新規登録</h1>
+
+							<!-- エラーメッセージを表示 -->
+							<div th:if="${errorMessage}" class="error-message mt-4">[[${errorMessage}]]</div>
+
+							<th:block th:each="Ingredient, st : *{ingredients}">
+								<table class="table addIngredient mt-4">
+									<tr>
+										<th class="ingNum" rowspan="15"></th>
+										<th>食材:</th>
+										<td colspan="3"><input type="text"
+												th:field="*{ingredients[__${st.index}__].name}" class="form-control i1">
+											<small class="error-message"
+												th:errors="*{ingredients[__${st.index}__].name}"></small>
+										</td>
+										<td class="text-center" style="vertical-align: middle;" rowspan="15"><button
+												type="button" onclick="deleteTableRow(this)"
+												class="btn-remove">dele</button>
+										</td>
+									</tr>
+
+									<tr>
+										<th>カナ:</th>
+										<td colspan="3"><input type="text"
+												th:field="*{ingredients[__${st.index}__].kana}" class="form-control i1">
+											<small class="error-message"
+												th:errors="*{ingredients[__${st.index}__].kana}"></small>
+										</td>
+									</tr>
+
+									<tr>
+										<td>食材カテゴリー：</td>
+										<td colspan="3"><select th:field="*{ingredients[__${st.index}__].foodCatId}"
+												class="i1">
+												<option value="">select</option>
+												<th:block th:each="foodCat : ${foodCatList}">
+													<option th:value="${foodCat.id}">[[${foodCat.name}]]</option>
+												</th:block>
+											</select>
+											<div>
+
+												<small class="error-message"
+													th:errors="*{ingredients[__${st.index}__].foodCatId}"></small>
+											</div>
+										</td>
+									</tr>
+									<th:block th:each="Ingredient, st2 : *{ingredients[__${st.index}__].allergyIdList}">
+										<tr class="allergyId">
+											<td class="agNum">：</td>
+											<td><select
+													th:field="*{ingredients[__${st.index}__].allergyIdList[__${st2.index}__].id}"
+													class="i1 i2">
+													<option value="">select</option>
+													<th:block th:each="allergy : ${allergyList}">
+														<option th:value="${allergy.id}">[[${allergy.name}]]</option>
+													</th:block>
+												</select></td>
+											<td><button type="button" onclick="onDeleteButtonClick(this)"
+													class="btn-allergyMinus">-</button></td>
+										</tr>
+									</th:block>
+									<tr>
+										<td></td>
+										<td><small class="error-message"></small></td>
+										<td>
+											<button type="button" onclick="addRow(this)"
+												class="btn-allergyPlus">+</button>
+										</td>
+									</tr>
+								</table>
+							</th:block>
+
+							<div class="text-end">
+								<button type="button" class="btn-clone">plus</button>
+							</div>
+
+							<div class="text-center my-5">
+								<input type="submit" value="保存" class="btn-save">
+							</div>
+
+						</div>
+					</form>
+				</main>
+
+			</div>
+		</div>
+
+	</div>
+
+	<!-- 右側から表示されるOffcanvasメニュー -->
+	<div th:replace="~{system/parts/common :: offcanvasMenu()}"></div>
+	<th:block th:replace="~{system/parts/common :: javascripts()}"></th:block>
+
+	<script>
+
+		//  アレルギー項目行追能機能:start
+		var maxRows = 10;
+
+		function addRow(button) {
+			var table = button.closest('.table.addIngredient');
+			var rowCount = table.rows.length;
+
+			if (rowCount < maxRows) {
+				var row = table.getElementsByTagName('tr')[rowCount - 2];
+
+				const select = row.querySelector('.i2');
+				const nameAttribute = select.getAttribute('name');
+
+				var startSubstring = 'ingredients[';
+				var startIndex = nameAttribute.indexOf(startSubstring);
+				var endIndex = nameAttribute.indexOf(']', startIndex + startSubstring.length);
+				var firstSubstring = nameAttribute.substring(startIndex + startSubstring.length, endIndex);
+
+				var secondSubstring = '.allergyIdList[';
+				startIndex = nameAttribute.indexOf(secondSubstring);
+				endIndex = nameAttribute.indexOf('].id', startIndex + secondSubstring.length);
+				var thirdSubstring = nameAttribute.substring(startIndex + secondSubstring.length, endIndex);
+
+				var firstInteger = parseInt(firstSubstring);
+				var thirdInteger = parseInt(thirdSubstring) + 1;
+
+				const content = row.cloneNode(true);
+
+				const i1Elements = content.querySelectorAll('.i1');
+				i1Elements.forEach((element, index) => {
+					let name = element.getAttribute('name');
+					const regex = /(\[)(\d+)(\]\.id)/;
+
+					name = name.replace(regex, `$1${thirdInteger + index}$3`);
+
+					element.setAttribute('name', name);
+					element.setAttribute('id', `ingredients[${firstInteger}].allergyIdList[${thirdInteger + index}].id`);
+
+					const i1Elements = content.querySelectorAll('.i1');
+					const newInputs = content.querySelectorAll('td input');
+
+					newInputs.forEach(input => {
+						if (input.tagName === 'SELECT') {
+							input.value = '';
+						} else {
+							input.value = '';
+						}
+					});
+				});
+				row.parentElement.insertBefore(content, row.nextSibling);
+			} else {
+				alert("最大行数に達しました。");
+			}
+		}
+
+		//  アレルギー項目行追加機能:end
+		
+			 // レルギー項目行削除機能:start
+		function onDeleteButtonClick(button) {
+			var row = button.parentElement.parentElement;
+			var allAllergyIdRows = Array.from(row.parentElement.querySelectorAll('.allergyId'));
+
+			if (allAllergyIdRows.length > 1) {
+				row.parentElement.removeChild(row); 
+			} else {
+				alert("最後の行は削除できません。");
+			}
+		}
+// レルギー項目行削除機能:end
+
+
+		// 食材テーブル追加処理:start
+		var cloneButton = document.querySelector('.btn-clone');
+
+		cloneButton.addEventListener('click', function () {
+
+			const originalTable = this.parentNode.previousElementSibling;
+			console.log(originalTable);
+
+			const firstTdInput = originalTable.querySelector('td input');
+			const nameAttributeValue = firstTdInput.getAttribute('name');
+			let insideBrackets = nameAttributeValue.substring(nameAttributeValue.indexOf('[') + 1, nameAttributeValue.indexOf(']')); // [と]の中の文字を取得
+			insideBrackets = parseInt(insideBrackets) + 1;
+			console.log(insideBrackets);
+
+			const content = originalTable.cloneNode(true);
+
+			const i1Elements = content.querySelectorAll('.i1');
+			i1Elements.forEach(element => {
+				let name = element.getAttribute('name');
+				const regex = /(ingredients\[)(.*?)(\])/;
+				const updatedName = name.replace(regex, `$1${insideBrackets}$3`);
+				element.setAttribute('name', updatedName);
+			});
+
+			originalTable.parentElement.insertBefore(content,
+				originalTable.nextSibling);
+
+			const newInputs = content.querySelectorAll('td input');
+			newInputs.forEach(input => {
+				input.value = '';
+			});
+
+		});
+		// 食材テーブル追加処理:end
+
+		// テーブル連番処理:start
+		$(document).ready(function () {
+			function updateTableCount() {
+				var tables = $('table');
+
+				// テーブルの数をカウント
+				var tableCount = tables.length;
+
+				// 各 .ingNum に連番を振り直す
+				$('.ingNum').each(function (idx) {
+					$(this).html(idx + 1);
+				});
+			}
+
+			// ページ読み込み時に初回のテーブルカウントと連番振りを行う
+			updateTableCount();
+
+			// テーブル追加ボタンがクリックされたときの処理
+			$('.btn-clone').on('click', function () {
+				// テーブルを追加する処理（適切な処理を実装する）
+
+				// テーブルを追加した後にテーブルのカウントと連番を振り直す
+				updateTableCount();
+			});
+
+		});
+		// テーブル連番処理:end
+
+		// テーブル削除処理:start
+		function deleteTableRow(button) {
+			var table = button.closest('.table.addIngredient');
+			var container = table.parentElement;
+
+			if (document.querySelectorAll('.table.addIngredient').length > 1) {
+				container.removeChild(table);
+				updateTableCount();
+			} else {
+				alert("最後のテーブルは削除できません。");
+			}
+		}
+		// テーブル削除処理:end
+
+		// テーブル削除処理後の連番振り直し処理:start
+		function updateTableCount() {
+			var tables = document.querySelectorAll('.table.addIngredient');
+
+			// 各テーブルに連番を振り直す
+			tables.forEach(function (table, idx) {
+
+				// 更新された連番を .ingNum にも反映
+				var ingNumElement = table.querySelector('.ingNum');
+				if (ingNumElement) {
+					ingNumElement.textContent = idx + 1;
+				}
+			});
+		}
+		// テーブル削除処理後の連番振り直し処理:end
+	</script>
+</body>
+
+</html>

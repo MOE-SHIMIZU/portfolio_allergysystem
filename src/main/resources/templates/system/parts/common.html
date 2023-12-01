@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="html_head()">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<script src="https://kit.fontawesome.com/bff2254426.js" crossorigin="anonymous"></script>
+	<title>アレルギー管理システム</title>
+</head>
+
+<body>
+
+
+	<!-- SP版ハンバーガーメニュー -->
+	<th:block th:fragment="hamburgerMenu()">
+		<div class="sticky-top">
+			<div class="ham">
+				<div class="navbar navbar-expand-lg d-lg-none">
+					<div class="container-fluid">
+						<a class="navbar-brand" href="top.html">SETTING</a>
+						<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+							data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	<!-- SP版ハンバーガーメニュー:end -->
+
+
+	<th:block th:fragment="pagination(totalPages, page, baseUrl)" th:if="${totalPages >= 2}">
+		<ul class="pagination text-center my-5">
+			<!-- 前のページへ -->
+			<th:block th:switch="${page}">
+				<li th:case="1" class="page-item disabled"><a class="page-link" href="">&laquo;</a></li>
+				<li th:case="*" class="page-item"><a class="page-link"
+						th:href="@{/{baseUrl}(baseUrl=${baseUrl}, page=${page - 1})}">&laquo;</a>
+				</li>
+			</th:block>
+
+			<!-- ページ番号 -->
+			<th:block th:each="index : ${#numbers.sequence(1, totalPages)}">
+				<th:block th:switch="${index}">
+					<li th:case="${page}" class="page-item active"><a class="page-link" href="">[[${index}]]</a></li>
+					<li th:case="*" class="page-item"><a class="page-link"
+							th:href="@{/{baseUrl}(baseUrl=${baseUrl}, page=${index})}">[[${index}]]</a>
+					</li>
+				</th:block>
+			</th:block>
+
+			<!-- 次のページへ -->
+			<th:block th:switch="${page}">
+				<li th:case="${totalPages}" class="page-item disabled"><a class="page-link" href="">&raquo;</a></li>
+				<li th:case="*" class="page-item"><a class="page-link"
+						th:href="@{/{baseUrl}(baseUrl=${baseUrl}, page=${page + 1})}">&raquo;</a>
+				</li>
+			</th:block>
+		</ul>
+	</th:block>
+
+
+
+
+	<div class="container-fluid">
+
+		<!-- PC版サイドメニュー:start -->
+		<div th:fragment="sideMenu()" class="row">
+			<nav id="sidebar" class="col-lg-3 position-fixed d-none d-lg-block">
+				<div class="container">
+
+					<div class="sidebar-header">
+						<h2 class="my-3">
+							<a class="navbar-brand" href="">SETTING</a>
+						</h2>
+					</div>
+
+					<div class="container-fluid overflow-auto">
+
+						<ul class="nav nav-pills flex-column">
+							<li class="disabled"><a class="nav-link disabled">商品</a></li>
+
+							<li class="nav-item"><a class="nav-link"
+									th:class="${#httpServletRequest.getRequestURI() == '/order'} ? 'nav-link active' : 'nav-link'"
+									th:href="@{/order}">商品一覧</a></li>
+
+							<li class="nav-item"><a aria-current="page"
+									th:class="${#httpServletRequest.getRequestURI() == '/order/add'} ? 'nav-link active' : 'nav-link'"
+									th:href="@{/order/add}">商品新規登録</a></li>
+						</ul>
+
+						<ul class="nav nav-pills flex-column mt-3">
+							<li class="disabled"><a class="nav-link disabled">食材</a></li>
+
+							<li class="nav-item"><a class="nav-link"
+									th:class="${#httpServletRequest.getRequestURI() == '/ingredient'} ? 'nav-link active' : 'nav-link'"
+									th:href="@{/ingredient}">食材一覧</a></li>
+
+							<li class="nav-item"><a class="nav-link"
+									th:class="${#httpServletRequest.getRequestURI() == '/ingredient/add'} ? 'nav-link active' : 'nav-link'"
+									th:href="@{/ingredient/add}">食材新規登録</a></li>
+						</ul>
+
+						<ul class="nav nav-pills flex-column mt-3">
+							<li class="disabled"><a class="nav-link disabled">アレルギー</a></li>
+
+							<li class="nav-item"><a class="nav-link"
+									th:class="${#httpServletRequest.getRequestURI() == '/allergy'} ? 'nav-link active' : 'nav-link'"
+									th:href="@{/allergy}">アレルギー一覧</a></li>
+
+							<li class="nav-item"><a class="nav-link"
+									th:class="${#httpServletRequest.getRequestURI() == '/allergy/add'} ? 'nav-link active' : 'nav-link'"
+									th:href="@{/allergy/add}">アレルギー新規登録</a></li>
+
+							<th:block th:if="${#strings.contains(#httpServletRequest.getRequestURL(),'/allergy/edit')}">
+								<li class="nav-item"><a class="nav-link active" th:href="@{/allergy/edit}">アレルギー編集</a>
+								</li>
+							</th:block>
+						</ul>
+
+						<ul class="nav nav-pills flex-column mt-3">
+							<li class="disabled"><a class="nav-link disabled">食品カテゴリー</a></li>
+
+							<li class="nav-item"><a class="nav-link"
+									th:class="${#httpServletRequest.getRequestURI() == '/foodCat'} ? 'nav-link active' : 'nav-link'"
+									th:href="@{/foodCat}">食品カテゴリー一覧</a></li>
+
+							<li class="nav-item"><a class="nav-link"
+									th:class="${#httpServletRequest.getRequestURI() == '/foodCat/add'} ? 'nav-link active' : 'nav-link'"
+									th:href="@{/foodCat/add}">食品カテゴリー新規登録</a></li>
+							<th:block
+								th:if="${#strings.contains(#httpServletRequest.getRequestURI(), '/foodCat/edit')}">
+								<li class="nav-item"><a class="nav-link active" th:href="@{/foodCat/edit}">食品カテゴリー編集</a>
+								</li>
+							</th:block>
+						</ul>
+
+					</div>
+
+
+					<div class="dropdown">
+						<a href="#"
+							class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+							data-bs-toggle="dropdown" aria-expanded="false"> <img th:src="@{/gallery/moepic.jpg}" alt=""
+								width="32" height="32" class="rounded-circle me-2"> <strong class="ps-2">Moe
+								Shimizu</strong>
+						</a>
+						<ul class="dropdown-menu text-small shadow">
+							<li><a class="dropdown-item" href="">プロフィール</a></li>
+						</ul>
+					</div>
+
+				</div>
+			</nav>
+		</div>
+		<!-- PC版サイドメニュー:end -->
+
+		<!-- メインコンテンツ -->
+		<div class="container-fluid">
+			<div class="row">
+
+				<main class="col-lg-9 p-lg-5 offset-lg-3">
+					<div class="container">
+
+						<!--　ページネーション　-->
+
+					</div>
+				</main>
+
+			</div>
+		</div>
+		<!-- メインコンテンツ:end -->
+
+
+	</div>
+
+
+	<!-- humbergurMenu詳細Offcanvasメニュー:start -->
+	<div th:fragment="offcanvasMenu()" class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+		aria-labelledby="offcanvasRightLabel">
+
+		<div class="offcanvas-header">
+			<h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas
+				right</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+
+		<div class="offcanvas-body">
+			<!-- Offcanvasメニューの内容をここに追加 -->
+			<ul class="navbar-nav">
+				<li class="disabled"><a class="nav-link disabled">商品</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/order}">商品一覧</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/order/add}">商品新規登録</a></li>
+
+				<li class="disabled"><a class="nav-link disabled">食材</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/ingredient}">食材一覧</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/ingredient/add}">食材新規登録</a></li>
+
+				<li class="disabled"><a class="nav-link disabled">アレルギー</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/allergy}">アレルギー一覧</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/allergy/add}">アレルギー新規登録</a></li>
+
+				<li class="disabled"><a class="nav-link disabled">食品カテゴリー</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/foodCat}">食品カテゴリー一覧</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/foodCat/add}">食品カテゴリー新規登録</a></li>
+			</ul>
+
+			<div class="dropdown">
+				<a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+					data-bs-toggle="dropdown" aria-expanded="false"> <img th:src="@{/gallery/moepic.jpg}" alt=""
+						width="32" height="32" class="rounded-circle me-2"> <strong class="ps-2">Moe
+						Shimizu</strong>
+				</a>
+				<ul class="dropdown-menu text-small shadow">
+					<li><a class="dropdown-item" href="#">プロフィール</a></li>
+				</ul>
+			</div>
+
+		</div>
+
+	</div>
+	<!-- humbergurMenu詳細Offcanvasメニュー:end -->
+
+	<!-- Modal:start -->
+	<div th:fragment="model(titleDele)" class="modal fade" id="exampleModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">[[${titleDele}]]</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					「<span id="delete-name"></span>」を削除します。よろしいですか？
+				</div>
+				<div class="modal-footer">
+					<a id="delete-yes">
+						<button type="button" class="btn-no" data-bs-dismiss="modal">キャンセル</button>
+					</a>
+					<button class="btn-yes">削除</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal:end -->
+
+	<th:block th:fragment="javascripts()">
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	</th:block>
+
+</body>
+
+</html>
