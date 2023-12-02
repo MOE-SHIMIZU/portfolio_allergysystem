@@ -94,21 +94,21 @@ body>#sidebar {
 	border-radius: 15px;
 }
 
-/* 各一覧ページ　Modal内「はい」ボタン */
+/* 各一覧ページ　Modal内「削除」ボタン */
 .btn-yes{
 	width: 70px;
 	height: 30px;
-	margin-left: 50px;
 	font-size: 16px;
 	color: white;
 	background-color: tomato;
 	border: none;
 	border-radius: 15px;
+	margin-left: 10px;
 }
 
 /* 一覧Modal内「キャンセル」ボタン */
 .btn-no{
-	width: 140%;
+	width: 130px;
 	height: 30px;
 	font-size: 16px;
     color: lightseagreen;
