@@ -7,10 +7,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class ApplicationConfig implements WebMvcConfigurer {
 
-	 @Override
+	@Override
 	 public void addResourceHandlers(ResourceHandlerRegistry registry) {
 	 registry.addResourceHandler("/gallery/**")
-	 .addResourceLocations("file:/home/trainee/uploads/");
+	 .addResourceLocations("file:/Users/zoomohe/Desktop/gallery/");
 	 }
 	
 }

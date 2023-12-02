@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
 		if (!upfile.isEmpty()) {
 			String img = upfile.getOriginalFilename();
 			order.setImg(img);
-			File dest = new File("/home/trainee/uploads/"+ img);
+			File dest = new File("/Users/zoomohe/Desktop/gallery/"+ img);
 			upfile.transferTo(dest);
 		}
 
