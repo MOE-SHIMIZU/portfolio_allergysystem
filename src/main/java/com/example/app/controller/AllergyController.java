@@ -92,7 +92,7 @@ public class AllergyController {
 				.collect(Collectors.toList());
 
 		if (validAllergies == null || validAllergies.isEmpty()) {
-			model.addAttribute("errorMessage", "新規食品カテゴリー登録に必要なデータが見当たりません。必要項目を入力してください。");
+			model.addAttribute("errorMessage", "新規アレルギー登録に必要なデータが見当たりません。必要項目を入力してください。");
 			return "system/allergy/addAllergy";
 		} else if (errors.hasErrors()) {
 			return "system/allergy/addAllergy";

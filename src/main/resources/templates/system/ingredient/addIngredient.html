@@ -17,7 +17,7 @@
 
 				<!-- メインコンテンツ -->
 				<main class="col-lg-9 p-lg-5 offset-lg-3">
-					<form action="#" method="post" enctype="multipart/form-data" th:object="${ingredientsForm}">
+					<form action="" method="post" th:object="${ingredientsForm}">
 						<div class="container">
 
 							<h1 class="">食材新規登録</h1>
@@ -171,19 +171,19 @@
 		}
 
 		//  アレルギー項目行追加機能:end
-		
-			 // レルギー項目行削除機能:start
+
+		// レルギー項目行削除機能:start
 		function onDeleteButtonClick(button) {
 			var row = button.parentElement.parentElement;
 			var allAllergyIdRows = Array.from(row.parentElement.querySelectorAll('.allergyId'));
 
 			if (allAllergyIdRows.length > 1) {
-				row.parentElement.removeChild(row); 
+				row.parentElement.removeChild(row);
 			} else {
 				alert("最後の行は削除できません。");
 			}
 		}
-// レルギー項目行削除機能:end
+		// レルギー項目行削除機能:end
 
 
 		// 食材テーブル追加処理:start

@@ -26,6 +26,11 @@ body>#sidebar {
 	height: auto;
 }
 
+.side-menu-scroll {
+    max-height: calc(80vh - 56px); 
+    overflow-y: auto; 
+}
+
 .nav-link {
 	color: rgb(99, 99, 99);
 }
@@ -58,11 +63,6 @@ body>#sidebar {
 
 .offcanvas-body .disabled {
 	margin-top: 5px;
-}
-
-.dropdown {
-	position: fixed;
-	bottom: 80px;
 }
 
 /* 各ボタン */
