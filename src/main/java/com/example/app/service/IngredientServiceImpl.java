@@ -48,21 +48,25 @@ public class IngredientServiceImpl implements IngredientService {
 			if (!name.equals("")) {
 				String kana = inge.getKana();
 				Integer foodCatId = inge.getFoodCatId();
-	
+
 				ingredient.setName(name);
 				ingredient.setKana(kana);
 				ingredient.setFoodCatId(foodCatId);
-	
+
 				ingredientMapper.insert(ingredient);
-	
-				for (Allergy allergy : inge.getAllergyIdList()) {
-					IngredientsAllergies ingAg = new IngredientsAllergies();
-	
-					ingAg.setIngredientId(ingredient.getId());
-					ingAg.setAllergyId(allergy.getId());
-	
-					ingAgMapper.insert(ingredient.getId(), allergy.getId());
+
+				List<Allergy> allergyList = inge.getAllergyIdList();
+				for (Allergy allergy : allergyList) {
+
+					if (allergy.getId() != null) {
+						IngredientsAllergies ingAg = new IngredientsAllergies();
+						ingAg.setIngredientId(ingredient.getId());
+						ingAg.setAllergyId(allergy.getId());
+
+						ingAgMapper.insert(ingAg.getIngredientId(), ingAg.getAllergyId());
+					}
 				}
+
 			}
 		}
 
@@ -85,13 +89,12 @@ public class IngredientServiceImpl implements IngredientService {
 		double totalNum = (double) ingredientMapper.count();
 		return (int) Math.ceil(totalNum / numPerPage);
 	}
-	
+
 	//	ページネーション
 	@Override
 	public List<Ingredient> getIngredientListByPage(int page, int numPerPage) throws Exception {
 		int offset = numPerPage * (page - 1);
 		return ingredientMapper.selectLimited(offset, numPerPage);
 	}
-
 
 }

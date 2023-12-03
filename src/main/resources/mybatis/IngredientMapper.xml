@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.app.mapper.IngredientMapper">
 
+	<resultMap id="joinedResult" type="Ingredient"
+		autoMapping="true">
+		<id property="id" column="id" />
+		<collection property="allergyIdList" ofType="allergy"
+			autoMapping="true">
+			<id property="id" column="allergy_id" />
+			<result property="name" column="allergy_name" />
+		</collection>
+	</resultMap>
+
 	<select id="selectAll" resultType="Ingredient">
 		SELECT
 		ingredient.id,
@@ -56,8 +66,8 @@
 		SELECT COUNT(*) FROM ingredient
 	</select>
 
-	<!-- ページネーション -->
-	<select id="selectLimited" resultType="Ingredient">
+	<!-- ページネーション　各ページ用のリスト -->
+	<select id="selectLimited" resultMap="joinedResult">
 		SELECT
 		ingredient.id,
 		ingredient.name,
@@ -68,12 +78,12 @@
 		ingredient.created
 		FROM
 		ingredient
+		JOIN food_cat ON food_cat.id =
+		ingredient.food_cat_id
 		LEFT JOIN ingredients_allergies ON ingredient.id =
 		ingredients_allergies.ingredient_id
 		LEFT JOIN allergy ON allergy.id =
 		ingredients_allergies.allergy_id
-		LEFT JOIN food_cat ON food_cat.id =
-		ingredient.food_cat_id
 		GROUP BY ingredient.id, ingredient.name,
 		food_cat.name
 		ORDER BY ingredient.id ASC
