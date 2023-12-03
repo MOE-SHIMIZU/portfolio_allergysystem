@@ -91,23 +91,18 @@ public class IngredientController {
 		    boolean isKanaEmpty = currentElement.getKana() == null || currentElement.getKana().isEmpty();
 		    boolean isFoodCatIdNull = currentElement.getFoodCatId() == null;
 
-			if (isNameEmpty) {
-				if (isKanaEmpty) {
-					}else {
-						fieldErrors.add(new FieldError("ingredients", "ingredients[" + i + "].name", "error.name.empty"));
-				}
-			}else if (isKanaEmpty) {
-				fieldErrors.add(new FieldError("ingredients", "ingredients[" + i + "].kana", "error.kana.empty"));
+		    if (isNameEmpty) {
+		        if (!isKanaEmpty) {
+		            fieldErrors.add(new FieldError("ingredients", "ingredients[" + i + "].name", "error.ingredientName.empty"));
+		        }
+		    } else if (isKanaEmpty) {
+		        fieldErrors.add(new FieldError("ingredients", "ingredients[" + i + "].kana", "error.kana.empty"));
+		    }
+		    
+		    if (!isNameEmpty && !isKanaEmpty && isFoodCatIdNull) {
+		    	fieldErrors.add(new FieldError("ingredients", "ingredients[" + i + "].foodCatId", "error.foodCatId.empty"));
 			}
-			
-			if (!isFoodCatIdNull){
-				if (isNameEmpty) {
-					
-				}
-				fieldErrors.add(new FieldError("ingredients", "ingredients[" + i + "].name", "error.name.empty"));
-				
-				fieldErrors.add(new FieldError("ingredients", "ingredients[" + i + "].kana", "error.kana.empty"));
-			}
+
 
 		}
 		
