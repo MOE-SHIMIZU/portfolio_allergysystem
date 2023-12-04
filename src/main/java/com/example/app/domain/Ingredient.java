@@ -32,7 +32,7 @@ public class Ingredient {
 	private String allergyName;
 	
 	//	ingredientsAllergies
-	List<Allergy> allergyIdList;
+	List<IngredientsAllergies> allergyIdList;
 	
 
 }

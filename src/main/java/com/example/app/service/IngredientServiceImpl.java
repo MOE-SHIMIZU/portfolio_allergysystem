@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.app.domain.Allergy;
 import com.example.app.domain.Ingredient;
 import com.example.app.domain.IngredientsAllergies;
 import com.example.app.domain.IngredientsForm;
@@ -55,8 +54,8 @@ public class IngredientServiceImpl implements IngredientService {
 
 				ingredientMapper.insert(ingredient);
 
-				List<Allergy> allergyList = inge.getAllergyIdList();
-				for (Allergy allergy : allergyList) {
+				List<IngredientsAllergies> allergyList = inge.getAllergyIdList();
+				for (IngredientsAllergies allergy : allergyList) {
 
 					if (allergy.getId() != null) {
 						IngredientsAllergies ingAg = new IngredientsAllergies();
