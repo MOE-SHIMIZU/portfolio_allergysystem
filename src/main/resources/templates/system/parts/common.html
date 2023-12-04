@@ -49,7 +49,7 @@
 						<ul class="nav nav-pills flex-column">
 							<li class="disabled"><a class="nav-link disabled">商品</a></li>
 
-							<li class="nav-item"><a class="nav-link"
+							<li class="nav-item mt-2"><a class="nav-link"
 									th:class="${#httpServletRequest.getRequestURI() == '/order'} ? 'nav-link active' : 'nav-link'"
 									th:href="@{/order}">商品一覧</a></li>
 
@@ -61,7 +61,7 @@
 						<ul class="nav nav-pills flex-column mt-3">
 							<li class="disabled"><a class="nav-link disabled">食材</a></li>
 
-							<li class="nav-item"><a class="nav-link"
+							<li class="nav-item mt-2"><a class="nav-link"
 									th:class="${#httpServletRequest.getRequestURI() == '/ingredient'} ? 'nav-link active' : 'nav-link'"
 									th:href="@{/ingredient}">食材一覧</a></li>
 
@@ -73,7 +73,7 @@
 						<ul class="nav nav-pills flex-column mt-3">
 							<li class="disabled"><a class="nav-link disabled">アレルギー</a></li>
 
-							<li class="nav-item"><a class="nav-link"
+							<li class="nav-item mt-2"><a class="nav-link"
 									th:class="${#httpServletRequest.getRequestURI() == '/allergy'} ? 'nav-link active' : 'nav-link'"
 									th:href="@{/allergy}">アレルギー一覧</a></li>
 
@@ -90,7 +90,7 @@
 						<ul class="nav nav-pills flex-column mt-3">
 							<li class="disabled"><a class="nav-link disabled">食品カテゴリー</a></li>
 
-							<li class="nav-item"><a class="nav-link"
+							<li class="nav-item mt-2"><a class="nav-link"
 									th:class="${#httpServletRequest.getRequestURI() == '/foodCat'} ? 'nav-link active' : 'nav-link'"
 									th:href="@{/foodCat}">食品カテゴリー一覧</a></li>
 
@@ -107,7 +107,7 @@
 						<ul class="nav nav-pills flex-column mt-3 mb-5">
 							<li class="disabled"><a class="nav-link disabled">登録者管理</a></li>
 
-							<li class="nav-item"><a class="nav-link"
+							<li class="nav-item mt-2"><a class="nav-link"
 									th:class="${#httpServletRequest.getRequestURI() == '/user'} ? 'nav-link active' : 'nav-link'"
 									href="@{/user}">登録者一覧</a></li>
 
@@ -118,7 +118,7 @@
 					</div>
 
 					<!-- ドロップダウンメニュー -->
-					<div class="dropdown my-3">
+					<div class="dropdown my-4">
 						<a href=""
 							class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
 							data-bs-toggle="dropdown" aria-expanded="false"> <img th:src="@{/gallery/moepic.jpg}" alt=""
@@ -126,12 +126,11 @@
 								Shimizu</strong>
 						</a>
 						<ul class="dropdown-menu text-small shadow">
-							<li><a class="dropdown-item" href="#">設定</a></li>
-							<li><a class="dropdown-item" href="#">プロフィール</a></li>
+							<li><a class="dropdown-item" href="">プロフィール</a></li>
 							<li>
 								<hr class="dropdown-divider">
 							</li>
-							<li><a class="dropdown-item" href="#">ログアウト</a></li>
+							<li><a class="dropdown-item" href="">ログアウト</a></li>
 						</ul>
 					</div>
 
@@ -165,8 +164,7 @@
 		aria-labelledby="offcanvasRightLabel">
 
 		<div class="offcanvas-header">
-			<h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas
-				right</h5>
+			<h5 class="offcanvas-title" id="offcanvasRightLabel">SETTING</h5>
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
 
@@ -174,30 +172,38 @@
 			<!-- Offcanvasメニューの内容をここに追加 -->
 			<ul class="navbar-nav">
 				<li class="disabled"><a class="nav-link disabled">商品</a></li>
-				<li class="nav-item"><a class="nav-link" th:href="@{/order}">商品一覧</a></li>
+				<li class="nav-item mt-2"><a class="nav-link" th:href="@{/order}">商品一覧</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/order/add}">商品新規登録</a></li>
 
 				<li class="disabled"><a class="nav-link disabled">食材</a></li>
-				<li class="nav-item"><a class="nav-link" th:href="@{/ingredient}">食材一覧</a></li>
+				<li class="nav-item mt-2"><a class="nav-link" th:href="@{/ingredient}">食材一覧</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/ingredient/add}">食材新規登録</a></li>
 
 				<li class="disabled"><a class="nav-link disabled">アレルギー</a></li>
-				<li class="nav-item"><a class="nav-link" th:href="@{/allergy}">アレルギー一覧</a></li>
+				<li class="nav-item mt-2"><a class="nav-link" th:href="@{/allergy}">アレルギー一覧</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/allergy/add}">アレルギー新規登録</a></li>
 
 				<li class="disabled"><a class="nav-link disabled">食品カテゴリー</a></li>
-				<li class="nav-item"><a class="nav-link" th:href="@{/foodCat}">食品カテゴリー一覧</a></li>
+				<li class="nav-item mt-2"><a class="nav-link" th:href="@{/foodCat}">食品カテゴリー一覧</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/foodCat/add}">食品カテゴリー新規登録</a></li>
+				
+				<li class="disabled"><a class="nav-link disabled">登録者管理</a></li>
+				<li class="nav-item mt-2"><a class="nav-link" th:href="@{/user}">登録者一覧</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/add}">登録者新規登録</a></li>
 			</ul>
 
 			<div class="dropdown my-5">
-				<a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+				<a href="" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
 					data-bs-toggle="dropdown" aria-expanded="false"> <img th:src="@{/gallery/moepic.jpg}" alt=""
 						width="32" height="32" class="rounded-circle me-2"> <strong class="ps-2">Moe
 						Shimizu</strong>
 				</a>
 				<ul class="dropdown-menu text-small shadow">
 					<li><a class="dropdown-item" href="#">プロフィール</a></li>
+					<li>
+						<hr class="dropdown-divider">
+					</li>
+					<li><a class="dropdown-item" href="#">ログアウト</a></li>
 				</ul>
 			</div>
 

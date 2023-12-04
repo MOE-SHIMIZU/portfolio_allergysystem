@@ -43,12 +43,18 @@ body>#sidebar {
 }
 
 #sidebar .nav-pills .nav-link.active {
-	border-radius: 0px;
-	color: white;
-	background-color: lightseagreen;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-top-left-radius: 0; 
+    border-bottom-left-radius: 0;
+    color: white;
+    background-color: lightseagreen;
 }
 
+
 .nav-item:hover {
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
 	background-color: white;
 }
 
@@ -58,6 +64,7 @@ body>#sidebar {
 
 /* offcanvas */
 .offcanvas-body .nav-item:hover {
+	border-radius: 0px;
 	background-color: #F2F2F2;
 }
 
