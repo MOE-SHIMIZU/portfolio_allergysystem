@@ -39,7 +39,7 @@
 						</div>
 
 
-					<div class="updatedatail">更新者：清水　更新日時：[[${#dates.format(order.created,
+						<div class="updatedatail">更新者：清水　更新日時：[[${#dates.format(order.created,
 							'yy/MM/dd/E HH:mm:ss')}]]</div>
 
 
@@ -61,7 +61,8 @@
 									</tr>
 									<tr>
 										<th class="col-3">価格</th>
-										<td class="col-9">[[${#numbers.formatInteger(order.price, 1, 'COMMA')}]] 円(税抜)</td>
+										<td class="col-9">[[${#numbers.formatInteger(order.price, 1, 'COMMA')}]] 円(税抜)
+										</td>
 
 									</tr>
 									<tr>
@@ -93,8 +94,15 @@
 
 									<tr th:each="detail : ${details}">
 										<th class="num"></th>
-										<td>[[${detail.IngredientName}]]</td>
-										<td>[[${detail.allergies}]]</td>
+										<td>
+											<span th:if="${detail != null}"
+												th:text="${detail.IngredientName}"></span>
+											<span th:unless="${detail != null}">No detail available</span>
+										</td>
+										<td>
+											<span th:if="${detail != null}" th:text="${detail.allergies}"></span>
+											<span th:unless="${detail != null}">No detail available</span>
+										</td>
 									</tr>
 
 								</tbody>

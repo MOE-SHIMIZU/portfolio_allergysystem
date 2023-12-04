@@ -88,7 +88,7 @@
 
 
 	<!-- detai用 -->
-	<select id="selectOrderDetailById" parameterType="int"
+<!-- 	<select id="selectOrderDetailById" parameterType="int"
 		resultType="Order">
 
 		SELECT
@@ -102,7 +102,29 @@
 		WHERE orders.id = #{id}
 		GROUP BY ingredient.id
 
-	</select>
+	</select> -->
+	
+	
+	<select id="selectOrderDetailById" parameterType="int" resultType="Order">
+    SELECT
+        CASE 
+            WHEN detail.ingredient_id IS NULL THEN NULL
+            ELSE ingredient.name
+        END AS ingredient_name,
+        CASE 
+            WHEN detail.ingredient_id IS NULL THEN NULL
+            ELSE IFNULL(GROUP_CONCAT(allergy.name SEPARATOR ', '), 'no allergy')
+        END AS allergies
+    FROM orders
+    LEFT JOIN detail ON orders.id = detail.orders_id
+    LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
+    LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+    LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
+    WHERE orders.id = #{id}
+    GROUP BY detail.id
+</select>
+	
+	
 
 	<!-- ページネーション -->
 	<select id="count" resultType="long">
