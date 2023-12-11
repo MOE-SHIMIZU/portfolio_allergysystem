@@ -10,6 +10,17 @@
 
 	<th:block th:fragment="pagination(totalPages, page, baseUrl)" th:if="${totalPages >= 2}">
 		<ul class="pagination text-center my-5">
+
+			<!-- 最初のページ -->
+			<th:block th:switch="${page}">
+				<li th:case="1" class="page-item disabled">
+					<a class="page-link" href="">最初</a>
+				</li>
+				<li th:case="*" class="page-item">
+					<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, page=1)}">最初</a>
+				</li>
+			</th:block>
+
 			<!-- 前のページへ -->
 			<th:block th:switch="${page}">
 				<li th:case="1" class="page-item disabled">
@@ -22,7 +33,7 @@
 
 			<!-- ページ番号 -->
 			<th:block
-				th:with="startPage=${(page - 3 < 1) ? 1 : page - 3}, endPage=${(page + 3 > totalPages) ? totalPages : page + 3}">
+				th:with="startPage=${(page - 2 < 1) ? 1 : page - 2}, endPage=${(page + 2 > totalPages) ? totalPages : page + 2}">
 				<th:block th:each="index : ${#numbers.sequence(startPage, endPage)}">
 					<th:block th:switch="${index}">
 						<li th:case="${page}" class="page-item active">
@@ -35,7 +46,7 @@
 					</th:block>
 				</th:block>
 			</th:block>
-			
+
 			<!-- 次のページへ -->
 			<th:block th:switch="${page}">
 				<li th:case="${totalPages}" class="page-item disabled">
@@ -45,6 +56,17 @@
 					<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, page=${page + 1})}">&raquo;</a>
 				</li>
 			</th:block>
+
+			<!-- 最後のページへ -->
+			<th:block th:if="${page}">
+				<li th:if="${currentPage != totalPages}" class="page-item">
+					<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, page=${totalPages})}">最後</a>
+				</li>
+				<li th:if="${currentPage == totalPages}" class="page-item disabled">
+					<a class="page-link" href="">最後</a>
+				</li>
+			</th:block>
+
 		</ul>
 	</th:block>
 

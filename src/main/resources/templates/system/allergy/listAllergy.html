@@ -8,74 +8,80 @@
 	<!-- SP版ハンバーガーメニュー -->
 	<th:block th:replace="~{system/parts/common :: hamburgerMenu()}"></th:block>
 
-		<div class="container-fluid">
-			<!-- サイドメニュー（PC版） -->
-			<div th:replace="~{system/parts/common :: sideMenu()}" class="row"></div>
+	<div class="container-fluid">
+		<!-- サイドメニュー（PC版） -->
+		<div class="row">
+			<nav th:replace="~{system/parts/common :: sideMenu()}" id="sidebar"
+				class="col-lg-3 position-fixed d-none d-lg-block"></nav>
 
-			<!-- メインコンテンツ -->
-			<main class="col-lg-9 p-lg-5 offset-lg-3">
-				<div class="container">
+			<div class="container-fluid">
+				<div class="row">
+					<!-- メインコンテンツ -->
+					<main class="col-lg-9 p-lg-5 offset-lg-3">
+						<div class="container">
 
-					<h1 class="">アレルギー一覧</h1>
+							<h1 class="">アレルギー一覧</h1>
 
-					<div th:if="${statusMessage}" class="alert alert-warning mt-3 mb-0" role="alert">
-						[[${statusMessage}]]</div>
+							<div th:if="${statusMessage}" class="alert alert-warning mt-3 mb-0" role="alert">
+								[[${statusMessage}]]</div>
 
-					<div class="btn">
-						<a th:href="@{/allergy/add}">
-							<button class="btn-createNew">＋ 新規登録</button>
-						</a>
-					</div>
+							<div class="btn">
+								<a th:href="@{/allergy/add}">
+									<button class="btn-createNew">＋ 新規登録</button>
+								</a>
+							</div>
 
-					<div class="table-responsive">
-						<table class="table table-striped table-hover">
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>項目名</th>
-									<th class="col-sm-0 d-none d-sm-table-cell">最新更新者</th>
-									<th class="col-sm-0 d-none d-sm-table-cell">最新更新日時</th>
-									<th colspan="2">操作</th>
-								</tr>
+							<div class="table-responsive-sm">
+								<table class="table table-striped table-hover">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>項目名</th>
+											<th class="col-sm-0 d-none d-sm-table-cell">最新更新者</th>
+											<th class="col-sm-0 d-none d-sm-table-cell">最新更新日時</th>
+											<th colspan="2">操作</th>
+										</tr>
 
-							</thead>
-							<tbody class="table-group-divider">
-								<tr th:each="allergy : ${AllergyListByPage}">
+									</thead>
+									<tbody class="table-group-divider">
+										<tr th:each="allergy : ${AllergyListByPage}">
 
-									<th>[[${allergy.id}]]</th>
-									<td>[[${allergy.name}]]</td>
-									<td class="col-sm-0 d-none d-sm-table-cell">user</td>
-									<td class="col-sm-0 d-none d-sm-table-cell">[[${#dates.format(allergy.created,
-										'yy/MM/dd/E HH:mm:ss')}]]</td>
-									<td>
-										<a th:href="@{/allergy/edit/{id}(id=${allergy.id})}"><button type="button"
-												class="btn-edit">edit</button></a>
-									</td>
-									<td>
-										<!-- Button trigger modal -->
-										<button type="button" class="btn-remove delete" data-bs-toggle="modal"
-											th:href="@{/allergy/delete/{id}(id=${allergy.id})}"
-											data-bs-target="#exampleModal" th:data-name="${allergy.name}">
-											dele
-										</button>
-									</td>
+											<th>[[${allergy.id}]]</th>
+											<td>[[${allergy.name}]]</td>
+											<td class="col-sm-0 d-none d-sm-table-cell">user</td>
+											<td class="col-sm-0 d-none d-sm-table-cell">
+												[[${#dates.format(allergy.created,
+												'yy/MM/dd/E HH:mm:ss')}]]</td>
+											<td>
+												<a th:href="@{/allergy/edit/{id}(id=${allergy.id})}"><button
+														type="button" class="btn-edit">edit</button></a>
+											</td>
+											<td>
+												<!-- Button trigger modal -->
+												<button type="button" class="btn-remove delete" data-bs-toggle="modal"
+													th:href="@{/allergy/delete/{id}(id=${allergy.id})}"
+													data-bs-target="#exampleModal" th:data-name="${allergy.name}">
+													dele
+												</button>
+											</td>
 
-								</tr>
-							</tbody>
-						</table>
-					</div>
+										</tr>
+									</tbody>
+								</table>
 
-					<!-- 2 ページ以上の場合、ページネーションを表示-->
-					<div
-						th:replace="~{system/parts/pagination :: pagination(${totalPages}, ${currentPage}, 'allergy')}">
-					</div>
+
+								<!-- 2 ページ以上の場合、ページネーションを表示-->
+								<div
+									th:replace="~{system/parts/pagination :: pagination(${totalPages}, ${currentPage}, 'allergy')}">
+								</div>
+								
+							</div>
+						</div>
+					</main>
 
 				</div>
-			</main>
-
+			</div>
 		</div>
-	</div>
-
 	</div>
 
 	<!-- 右側から表示されるOffcanvasメニュー -->

@@ -10,77 +10,77 @@
 
 	<div class="container-fluid">
 		<!-- サイドメニュー（PC版） -->
-		<div th:replace="~{system/parts/common :: sideMenu()}" class="row"></div>
+		<div class="row">
+			<nav th:replace="~{system/parts/common :: sideMenu()}" id="sidebar"
+				class="col-lg-3 position-fixed d-none d-lg-block"></nav>
 
-		<div class="container-fluid">
-			<div class="row">
+			<div class="container-fluid">
+				<div class="row">
 
-				<!-- メインコンテンツ -->
-				<main class="col-lg-9 p-lg-5 offset-lg-3">
+					<!-- メインコンテンツ -->
+					<main class="col-lg-9 p-lg-5 offset-lg-3">
 
-					<div class="container">
+						<div class="container">
 
-						<h1>商品詳細</h1>
+							<h1>商品詳細</h1>
 
-						<div class="d-flex justify-content-between">
+							<div class="d-flex justify-content-between">
 
-							<div class="btn">
-								<a th:href="@{/order/edit}">
-									<button class="btn-detail-edit-dele">ー 編集／削除</button>
-								</a>
+								<div class="btn">
+									<a th:href="@{/order/edit}">
+										<button class="btn-detail-edit-dele">ー 編集／削除</button>
+									</a>
+								</div>
+
+								<div class="btn">
+									<a th:href="@{/order/add}">
+										<button class="btn-createNew">＋ 新規登録</button>
+									</a>
+								</div>
+
 							</div>
 
-							<div class="btn">
-								<a th:href="@{/order/add}">
-									<button class="btn-createNew">＋ 新規登録</button>
-								</a>
+
+							<div class="updatedatail">更新者：清水　更新日時：[[${#dates.format(order.created,
+								'yy/MM/dd/E HH:mm:ss')}]]</div>
+
+
+							<div class="row">
+								<div class="col-md-4">
+									<img class="img-fluid" th:src="@{/gallery/{img}(img=${order.img})}" alt="">
+								</div>
+
+								<div class="col-md-8 mt-4 mt-sm-4 mt-md-0">
+									<table class="detailOrderTable table table-hover detailOrderTable">
+										<tr>
+											<th class="col-3">ID</th>
+											<td class="col-9">[[${order.id}]]</td>
+										</tr>
+
+										<tr>
+											<th class="col-3">商品名</th>
+											<td class="col-9">[[${order.name}]]</td>
+										</tr>
+										<tr>
+											<th class="col-3">価格</th>
+											<td class="col-9">[[${#numbers.formatInteger(order.price, 1, 'COMMA')}]]
+												円(税抜)
+											</td>
+
+										</tr>
+										<tr>
+											<th class="col-3">該当アレルギー</th>
+											<td class="col-9">[[${order.allergyAndIngredient}]]</td>
+										</tr>
+										<tr>
+											<th class="col-3">備考</th>
+											<td class="col-9">
+												[[${order.note}]]
+											</td>
+										</tr>
+									</table>
+								</div>
 							</div>
-
-						</div>
-
-
-						<div class="updatedatail">更新者：清水　更新日時：[[${#dates.format(order.created,
-							'yy/MM/dd/E HH:mm:ss')}]]</div>
-
-
-						<div class="row">
-							<div class="col-md-4">
-								<img class="img-fluid" th:src="@{/gallery/{img}(img=${order.img})}" alt="">
-							</div>
-
-							<div class="col-md-8 mt-4 mt-sm-4 mt-md-0">
-								<table class="detailOrderTable table table-hover detailOrderTable">
-									<tr>
-										<th class="col-3">ID</th>
-										<td class="col-9">[[${order.id}]]</td>
-									</tr>
-
-									<tr>
-										<th class="col-3">商品名</th>
-										<td class="col-9">[[${order.name}]]</td>
-									</tr>
-									<tr>
-										<th class="col-3">価格</th>
-										<td class="col-9">[[${#numbers.formatInteger(order.price, 1, 'COMMA')}]] 円(税抜)
-										</td>
-
-									</tr>
-									<tr>
-										<th class="col-3">該当アレルギー</th>
-										<td class="col-9">[[${order.allergyAndIngredient}]]</td>
-									</tr>
-									<tr>
-										<th class="col-3">備考</th>
-										<td class="col-9">
-											[[${order.note}]]
-										</td>
-									</tr>
-								</table>
-							</div>
-
-						</div>
-
-						<div class="orders mt-4 mb-5" style="overflow-x: auto;">
 
 							<table class="table table-striped table-hover detailOrderTableBelow">
 								<thead>
@@ -95,8 +95,7 @@
 									<tr th:each="detail : ${details}">
 										<th class="num"></th>
 										<td>
-											<span th:if="${detail != null}"
-												th:text="${detail.IngredientName}"></span>
+											<span th:if="${detail != null}" th:text="${detail.IngredientName}"></span>
 											<span th:unless="${detail != null}">No detail available</span>
 										</td>
 										<td>
@@ -104,17 +103,14 @@
 											<span th:unless="${detail != null}">No detail available</span>
 										</td>
 									</tr>
-
 								</tbody>
 							</table>
 						</div>
-
-					</div>
-				</main>
-
+					</main>
+					
+				</div>
 			</div>
 		</div>
-
 	</div>
 
 

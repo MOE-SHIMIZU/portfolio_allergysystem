@@ -5,109 +5,117 @@
 
 <body>
 
-	<!-- SP版ハンバーガーメニュー -->
-	<th:block th:replace="~{system/parts/common :: hamburgerMenu()}"></th:block>
-
-	<div class="container-fluid">
-		<!-- サイドメニュー（PC版） -->
-		<div th:replace="~{system/parts/common :: sideMenu()}" class="row"></div>
+	<form action="" method="post" th:object="${ingredientsForm}">
+		<!-- SP版ハンバーガーメニュー -->
+		<th:block th:replace="~{system/parts/common :: hamburgerMenu()}"></th:block>
 
 		<div class="container-fluid">
+			<!-- サイドメニュー（PC版） -->
 			<div class="row">
+				<nav th:replace="~{system/parts/common :: sideMenu()}" id="sidebar"
+					class="col-lg-3 position-fixed d-none d-lg-block"></nav>
 
-				<!-- メインコンテンツ -->
-				<main class="col-lg-9 p-lg-5 offset-lg-3">
-					<form action="" method="post" th:object="${ingredientsForm}">
-						<div class="container">
+				<div class="container-fluid">
+					<div class="row">
 
-							<h1 class="">食材新規登録</h1>
+						<!-- メインコンテンツ -->
+						<main class="col-lg-9 p-lg-5 offset-lg-3">
+							<div class="container">
 
-							<!-- エラーメッセージを表示 -->
-							<div th:if="${errorMessage}" class="error-message mt-4">[[${errorMessage}]]</div>
+								<h1 class="">食材新規登録</h1>
 
-							<th:block th:each="Ingredient, st : *{ingredients}">
-								<table class="table addIngredient mt-4">
-									<tr>
-										<th class="ingNum" rowspan="15"></th>
-										<th>食材:</th>
-										<td colspan="3"><input type="text"
-												th:field="*{ingredients[__${st.index}__].name}" class="form-control i1">
-											<small class="error-message"
-												th:errors="*{ingredients[__${st.index}__].name}"></small>
-										</td>
-										<td class="text-center" style="vertical-align: middle;" rowspan="15"><button
-												type="button" onclick="deleteTableRow(this)"
-												class="btn-remove">dele</button>
-										</td>
-									</tr>
+								<!-- エラーメッセージを表示 -->
+								<div th:if="${errorMessage}" class="error-message mt-4">[[${errorMessage}]]</div>
 
-									<tr>
-										<th>カナ:</th>
-										<td colspan="3"><input type="text"
-												th:field="*{ingredients[__${st.index}__].kana}" class="form-control i1">
-											<small class="error-message"
-												th:errors="*{ingredients[__${st.index}__].kana}"></small>
-										</td>
-									</tr>
+								<th:block th:each="Ingredient, st : *{ingredients}">
+									<div class="table-responsive-sm">
+										<table class="table addIngredient mt-4">
+											<tr>
+												<th class="ingNum" rowspan="15"></th>
+												<th>食材:</th>
+												<td colspan="3"><input type="text"
+														th:field="*{ingredients[__${st.index}__].name}"
+														class="form-control i1">
+													<small class="error-message"
+														th:errors="*{ingredients[__${st.index}__].name}"></small>
+												</td>
+												<td class="text-center" style="vertical-align: middle;" rowspan="15">
+													<button type="button" onclick="deleteTableRow(this)"
+														class="btn-remove">dele</button>
+												</td>
+											</tr>
 
-									<tr>
-										<td>食材カテゴリー：</td>
-										<td colspan="3"><select th:field="*{ingredients[__${st.index}__].foodCatId}"
-												class="i1">
-												<option value="">select</option>
-												<th:block th:each="foodCat : ${foodCatList}">
-													<option th:value="${foodCat.id}">[[${foodCat.name}]]</option>
-												</th:block>
-											</select>
-											<div>
+											<tr>
+												<th>カナ:</th>
+												<td colspan="3"><input type="text"
+														th:field="*{ingredients[__${st.index}__].kana}"
+														class="form-control i1">
+													<small class="error-message"
+														th:errors="*{ingredients[__${st.index}__].kana}"></small>
+												</td>
+											</tr>
 
-												<small class="error-message"
-													th:errors="*{ingredients[__${st.index}__].foodCatId}"></small>
-											</div>
-										</td>
-									</tr>
-									<th:block th:each="Ingredient, st2 : *{ingredients[__${st.index}__].allergyIdList}">
-										<tr class="allergyId">
-											<td class="agNum">：</td>
-											<td><select
-													th:field="*{ingredients[__${st.index}__].allergyIdList[__${st2.index}__].id}"
-													class="i1 i2">
-													<option value="">select</option>
-													<th:block th:each="allergy : ${allergyList}">
-														<option th:value="${allergy.id}">[[${allergy.name}]]</option>
-													</th:block>
-												</select></td>
-											<td><button type="button" onclick="onDeleteButtonClick(this)"
-													class="btn-allergyMinus">-</button></td>
-										</tr>
-									</th:block>
-									<tr>
-										<td></td>
-										<td><small class="error-message"></small></td>
-										<td>
-											<button type="button" onclick="addRow(this)"
-												class="btn-allergyPlus">+</button>
-										</td>
-									</tr>
-								</table>
-							</th:block>
+											<tr>
+												<td>食材カテゴリー：</td>
+												<td colspan="3"><select
+														th:field="*{ingredients[__${st.index}__].foodCatId}" class="form-control i1">
+														<option value="">select</option>
+														<th:block th:each="foodCat : ${foodCatList}">
+															<option th:value="${foodCat.id}">[[${foodCat.name}]]
+															</option>
+														</th:block>
+													</select>
+													<div>
+														<small class="error-message"
+															th:errors="*{ingredients[__${st.index}__].foodCatId}"></small>
+													</div>
+												</td>
+											</tr>
+											<th:block
+												th:each="Ingredient, st2 : *{ingredients[__${st.index}__].allergyIdList}">
+												<tr class="allergyId">
+													<td class="agNum">：</td>
+													<td><select
+															th:field="*{ingredients[__${st.index}__].allergyIdList[__${st2.index}__].id}"
+															class="form-control i1 i2">
+															<option value="">select</option>
+															<th:block th:each="allergy : ${allergyList}">
+																<option th:value="${allergy.id}">[[${allergy.name}]]
+																</option>
+															</th:block>
+														</select></td>
+													<td><button type="button" onclick="onDeleteButtonClick(this)"
+															class="btn-allergyMinus">-</button></td>
+												</tr>
+											</th:block>
+											<tr>
+												<td></td>
+												<td><small class="error-message"></small></td>
+												<td>
+													<button type="button" onclick="addRow(this)"
+														class="btn-allergyPlus">+</button>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</th:block>
 
-							<div class="text-end">
-								<button type="button" class="btn-clone">plus</button>
+								<div class="text-end">
+									<button type="button" class="btn-clone">plus</button>
+								</div>
+
+								<div class="text-center my-5">
+									<input type="submit" value="保存" class="btn-save">
+								</div>
+
 							</div>
+						</main>
 
-							<div class="text-center my-5">
-								<input type="submit" value="保存" class="btn-save">
-							</div>
-
-						</div>
-					</form>
-				</main>
-
+					</div>
+				</div>
 			</div>
 		</div>
-
-	</div>
+	</form>
 
 	<!-- 右側から表示されるOffcanvasメニュー -->
 	<div th:replace="~{system/parts/common :: offcanvasMenu()}"></div>

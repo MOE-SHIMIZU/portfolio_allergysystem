@@ -33,16 +33,15 @@
 	<div class="container-fluid">
 
 		<!-- PC版サイドメニュー:start -->
-		<div th:fragment="sideMenu()" class="row">
-			<nav id="sidebar" class="col-lg-3 position-fixed d-none d-lg-block">
-				<div class="container">
+		<div class="row">
+			<nav th:fragment="sideMenu()" id="sidebar" class="col-lg-3 position-fixed d-none d-lg-block">
+				<div class="container-fluid">
 
 					<div class="sidebar-header">
 						<h2 class="my-3">
 							<a class="navbar-brand" href="">SETTING</a>
 						</h2>
 					</div>
-
 
 					<div class="side-menu-scroll">
 
@@ -136,26 +135,27 @@
 
 				</div>
 			</nav>
-		</div>
-		<!-- PC版サイドメニュー:end -->
 
-		<!-- メインコンテンツ -->
-		<div class="container-fluid">
-			<div class="row">
+			<!-- PC版サイドメニュー:end -->
 
-				<main class="col-lg-9 p-lg-5 offset-lg-3">
-					<div class="container">
+			<!-- メインコンテンツ -->
+			<div class="container-fluid">
+				<div class="row">
 
-						<!--　ページネーション　-->
+					<main class="col-lg-9 p-lg-5 offset-lg-3">
+						<div class="container">
 
-					</div>
-				</main>
+							<!--　ページネーション　-->
 
+						</div>
+					</main>
+
+				</div>
 			</div>
+			<!-- メインコンテンツ:end -->
+
+
 		</div>
-		<!-- メインコンテンツ:end -->
-
-
 	</div>
 
 
@@ -186,7 +186,7 @@
 				<li class="disabled"><a class="nav-link disabled">食品カテゴリー</a></li>
 				<li class="nav-item mt-2"><a class="nav-link" th:href="@{/foodCat}">食品カテゴリー一覧</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/foodCat/add}">食品カテゴリー新規登録</a></li>
-				
+
 				<li class="disabled"><a class="nav-link disabled">登録者管理</a></li>
 				<li class="nav-item mt-2"><a class="nav-link" th:href="@{/user}">登録者一覧</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/user/add}">登録者新規登録</a></li>
