@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.example.app.validation.AddGroup;
 import com.example.app.validation.EditGroup;
 
 import lombok.Data;
@@ -19,9 +21,10 @@ public class Ingredient {
 	private String name;
 	
 	@NotBlank(groups = {EditGroup.class})
-	@Pattern(regexp = "^[ァ-タダ-ヶー]*$")
+	@Pattern(regexp = "^[ァ-タダ-ヶー]*$", groups = { EditGroup.class, AddGroup.class })
 	private String kana;
 
+	@NotNull(groups = {EditGroup.class})
 	private Integer foodCatId;
 	
 	private User user;
@@ -32,7 +35,7 @@ public class Ingredient {
 	private String allergyName;
 	
 	//	ingredientsAllergies
-	List<IngredientsAllergies> allergyIdList;
+	private List<IngredientsAllergies> allergyIdList;
 	
 
 }

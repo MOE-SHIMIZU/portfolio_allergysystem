@@ -2,92 +2,113 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.app.mapper.IngredientMapper">
 
-	<resultMap id="joinedResult" type="Ingredient"
-		autoMapping="true">
-		<id property="id" column="id" />
-		<collection property="allergyIdList" ofType="allergy"
+		<resultMap id="joinedResult" type="Ingredient"
 			autoMapping="true">
-			<id property="id" column="allergy_id" />
-			<result property="name" column="allergy_name" />
-		</collection>
-	</resultMap>
+			<id property="id" column="id" />
+			<collection property="allergyIdList"
+				ofType="IngredientsAllergies" autoMapping="true">
+				<id property="id" column="ingAg_id" />
+				<result property="allergyId" column="allergy_id" />
+			</collection>
+		</resultMap>
 
-	<select id="selectAll" resultType="Ingredient">
-		SELECT
-		ingredient.id,
-		ingredient.name,
-		food_cat.name AS food_cat_name,
-		IFNULL(GROUP_CONCAT(DISTINCT allergy.name ORDER BY allergy.id
-		SEPARATOR ' / '), 'no allergy') AS
-		allergy_name,
-		ingredient.created
-		FROM
-		ingredient
-		LEFT JOIN ingredients_allergies ON ingredient.id =
-		ingredients_allergies.ingredient_id
-		LEFT JOIN allergy ON allergy.id =
-		ingredients_allergies.allergy_id
-		LEFT JOIN food_cat ON food_cat.id =
-		ingredient.food_cat_id
-		GROUP BY ingredient.id, ingredient.name,
-		food_cat.name
-		ORDER BY ingredient.id ASC;
-	</select>
+		<select id="selectAll" resultType="Ingredient">
+			SELECT
+			ingredient.id,
+			ingredient.name,
+			food_cat.name AS food_cat_name,
+			IFNULL(GROUP_CONCAT(DISTINCT allergy.name ORDER BY allergy.id
+			SEPARATOR ' / '), 'no allergy') AS
+			allergy_name,
+			ingredient.created
+			FROM
+			ingredient
+			LEFT JOIN ingredients_allergies ON ingredient.id =
+			ingredients_allergies.ingredient_id
+			LEFT JOIN allergy ON allergy.id =
+			ingredients_allergies.allergy_id
+			LEFT JOIN food_cat ON food_cat.id =
+			ingredient.food_cat_id
+			GROUP BY ingredient.id, ingredient.name,
+			food_cat.name
+			ORDER BY ingredient.id ASC;
+		</select>
 
-	<select id="selectById" parameterType="int"></select>
+		<select id="selectById" parameterType="int"
+			resultMap="joinedResult">
+			SELECT
+			ingredient.id,
+			ingredient.name,
+			ingredient.kana,
+			ingredient.food_cat_id,
+			ingredients_allergies.id AS ingAg_id,
+			ingredients_allergies.ingredient_id,
+			ingredients_allergies.allergy_id,
+			ingredient.created
+			FROM ingredient
+			LEFT JOIN ingredients_allergies ON ingredient.id =
+			ingredients_allergies.ingredient_id
+			WHERE ingredient.id = #{id}
+		</select>
 
-	<delete id="deleteById" parameterType="Ingredient">
-		DELETE FROM ingredient
-		WHERE id = #{id}
-	</delete>
-	
-	<update id="update" parameterType="Ingredient"></update>
+		<delete id="deleteById" parameterType="Ingredient">
+			DELETE FROM ingredient
+			WHERE id = #{id}
+		</delete>
 
-	<!-- selectフォーム用のList -->
-	<select id="selectIngredientFoodCat" resultType="Ingredient">
-		SELECT
-		ingredient.id,
-		ingredient.name,
-		ingredient.food_cat_id
-		FROM ingredient
-		ORDER BY ingredient.id ASC
-	</select>
+		<update id="update" parameterType="Ingredient"
+			useGeneratedKeys="true" keyProperty="id">
+			UPDATE ingredient
+			SET name =
+			#{name}, kana = #{kana}, food_cat_id = #{foodCatId}
+			WHERE id = #{id}
+		</update>
 
-	<!-- 一括投入用 -->
-	<insert id="insert" parameterType="Ingredient"
-		useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO ingredient(name, kana,
-		food_cat_id)
-		VALUES(#{name}, #{kana}, #{foodCatId})
-	</insert>
+		<!-- selectフォーム用のList -->
+		<select id="selectIngredientFoodCat" resultType="Ingredient">
+			SELECT
+			ingredient.id,
+			ingredient.name,
+			ingredient.food_cat_id
+			FROM ingredient
+			ORDER BY ingredient.id ASC
+		</select>
 
-	<!-- ページネーション -->
-	<select id="count" resultType="long">
-		SELECT COUNT(*) FROM ingredient
-	</select>
+		<!-- 一括投入用 -->
+		<insert id="insert" parameterType="Ingredient"
+			useGeneratedKeys="true" keyProperty="id">
+			INSERT INTO ingredient(name, kana,
+			food_cat_id)
+			VALUES(#{name}, #{kana}, #{foodCatId})
+		</insert>
 
-	<!-- ページネーション　各ページ用のリスト -->
-	<select id="selectLimited" resultMap="joinedResult">
-		SELECT
-		ingredient.id,
-		ingredient.name,
-		food_cat.name AS food_cat_name,
-		IFNULL(GROUP_CONCAT(DISTINCT allergy.name ORDER BY allergy.id
-		SEPARATOR ' / '), 'no allergy') AS
-		allergy_name,
-		ingredient.created
-		FROM
-		ingredient
-		JOIN food_cat ON food_cat.id =
-		ingredient.food_cat_id
-		LEFT JOIN ingredients_allergies ON ingredient.id =
-		ingredients_allergies.ingredient_id
-		LEFT JOIN allergy ON allergy.id =
-		ingredients_allergies.allergy_id
-		GROUP BY ingredient.id, ingredient.name,
-		food_cat.name
-		ORDER BY ingredient.id ASC
-		LIMIT #{offset},#{numPerPage}
-	</select>
+		<!-- ページネーション -->
+		<select id="count" resultType="long">
+			SELECT COUNT(*) FROM ingredient
+		</select>
+
+		<!-- ページネーション　各ページ用のリスト -->
+		<select id="selectLimited" resultMap="joinedResult">
+			SELECT
+			ingredient.id,
+			ingredient.name,
+			food_cat.name AS food_cat_name,
+			IFNULL(GROUP_CONCAT(DISTINCT allergy.name ORDER BY allergy.id
+			SEPARATOR ' / '), 'no allergy') AS
+			allergy_name,
+			ingredient.created
+			FROM
+			ingredient
+			JOIN food_cat ON food_cat.id =
+			ingredient.food_cat_id
+			LEFT JOIN ingredients_allergies ON ingredient.id =
+			ingredients_allergies.ingredient_id
+			LEFT JOIN allergy ON allergy.id =
+			ingredients_allergies.allergy_id
+			GROUP BY ingredient.id, ingredient.name,
+			food_cat.name
+			ORDER BY ingredient.id ASC
+			LIMIT #{offset},#{numPerPage}
+		</select>
 
 </mapper>

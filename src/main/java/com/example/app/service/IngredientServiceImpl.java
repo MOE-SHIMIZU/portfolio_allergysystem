@@ -1,5 +1,6 @@
 package com.example.app.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class IngredientServiceImpl implements IngredientService {
 					if (allergy.getId() != null) {
 						IngredientsAllergies ingAg = new IngredientsAllergies();
 						ingAg.setIngredientId(ingredient.getId());
-						ingAg.setAllergyId(allergy.getId());
+						ingAg.setAllergyId(allergy.getAllergyId());
 
 						ingAgMapper.insert(ingAg.getIngredientId(), ingAg.getAllergyId());
 					}
@@ -73,7 +74,71 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public void editIngredient(Ingredient ingredient) throws Exception {
-		ingredientMapper.update(ingredient);
+
+		Ingredient newIng = new Ingredient();
+
+		newIng.setId(ingredient.getId());
+		newIng.setName(ingredient.getName());
+		newIng.setKana(ingredient.getKana());
+		newIng.setFoodCatId(ingredient.getFoodCatId());
+		ingredientMapper.update(newIng);
+
+		List<IngredientsAllergies> allergyList = ingredient.getAllergyIdList();
+		List<IngredientsAllergies> newIngAgList = new ArrayList<>();
+		if (allergyList != null) {
+			for (IngredientsAllergies allergy : allergyList) {
+				if (allergy.getAllergyId() != null) {
+					IngredientsAllergies ingAg = new IngredientsAllergies();
+					
+					ingAg.setId(allergy.getId());
+					ingAg.setIngredientId(newIng.getId());
+					ingAg.setAllergyId(allergy.getAllergyId());
+					newIngAgList.add(ingAg);
+
+				}
+			}
+		}
+
+		// 新しいデータ確認
+		for (IngredientsAllergies newIngAg : newIngAgList) {
+			System.out.println("NEW"+newIngAg);
+		}
+
+		List<IngredientsAllergies> oldIngAgList = ingAgMapper.selectByingredientId(ingredient.getId());
+		for (IngredientsAllergies oldIngAg : oldIngAgList) {
+			boolean isExist = false;
+			// 古いデータ確認
+			System.out.println("OLD"+oldIngAg);
+			for (IngredientsAllergies newIngAg : newIngAgList) {
+
+				if (newIngAg.getAllergyId().equals(oldIngAg.getAllergyId())) {
+					isExist = true;
+					break;
+				}
+			}
+			if (!isExist) {
+				ingAgMapper.deleteById(oldIngAg.getId());
+			}
+
+		}
+
+		for (IngredientsAllergies newIngAg : newIngAgList) {
+
+			if (newIngAg.getId() == null) {
+				ingAgMapper.insert(newIng.getId(), newIngAg.getAllergyId());
+			} else {
+				// newIngAgList内のIDがnullでない場合、既存のレコードを更新
+				List<IngredientsAllergies> oldIngAgList2 = ingAgMapper.selectById(newIngAg.getId());
+				for (IngredientsAllergies oldIngAg2 : oldIngAgList2) {
+
+					if (!newIngAg.getAllergyId().equals(oldIngAg2.getAllergyId())) {
+					}
+
+					ingAgMapper.update(newIngAg);
+				}
+			}
+		}
+
 	}
 
 	//	selectフォーム用のList

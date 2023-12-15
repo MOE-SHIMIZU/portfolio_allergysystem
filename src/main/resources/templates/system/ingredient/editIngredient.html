@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{system/parts/common :: html_head()}"></head>
+
+<body>
+	<form action="" method="post">
+
+		<!-- SP版ハンバーガーメニュー -->
+		<th:block th:replace="~{system/parts/common :: hamburgerMenu()}"></th:block>
+
+		<div class="container-fluid">
+			<!-- サイドメニュー（PC版） -->
+			<div class="row">
+				<nav th:replace="~{system/parts/common :: sideMenu()}" id="sidebar"
+					class="col-lg-3 position-fixed d-none d-lg-block"></nav>
+				<div class="container-fluid">
+					<div class="row">
+
+						<!-- メインコンテンツ -->
+						<main class="col-lg-9 p-lg-5 offset-lg-3">
+							<div class="container">
+
+								<h1 class="">食材編集</h1>
+
+								<!-- エラーメッセージを表示 -->
+								<div th:if="${errorMessage}" class="mt-4">[[${errorMessage}]]</div>
+
+								<div class="table-responsive-sm">
+									<table class="table addIngredient mt-4">
+										<tr>
+											<th>ID：</th>
+											<td colspan="2" th:text="${ingredient.id}"></td>
+											<td class="text-center"
+												style="vertical-align: middle; background-color: white;" rowspan="15">
+												<button type="button" onclick="deleteTableRow(this)"
+													class="btn-remove">dele</button>
+											</td>
+
+										</tr>
+										<tr>
+											<th>食材：</th>
+											<td colspan="2"><input type="text" th:field="${ingredient.name}"
+													class="form-control i1">
+												<small class="error-message" th:errors="${ingredient.name}"></small>
+											</td>
+
+										</tr>
+
+										<tr>
+											<th>カナ:</th>
+											<td colspan="2"><input type="text" th:field="${ingredient.kana}"
+													class="form-control i1">
+												<small class="error-message" th:errors="${ingredient.kana}"></small>
+											</td>
+										</tr>
+
+										<tr>
+											<td>食材カテゴリー：</td>
+											<td colspan="2"><select th:field="${ingredient.foodCatId}"
+													class="form-control i1">
+													<th:block th:each="foodCat : ${foodCatList}">
+														<option th:value="${foodCat.id}">[[${foodCat.name}]]</option>
+													</th:block>
+												</select>
+												<div>
+													<small class="error-message"
+														th:errors="${ingredient.foodCatId}"></small>
+												</div>
+											</td>
+										</tr>
+
+										<tr th:each="ingredientsAllergies, st2 : ${ingredient.allergyIdList}"
+											class="allergyId">
+											<input type="hidden" th:field="${ingredient.allergyIdList[__${st2.index}__].id}">
+											<td class="agNum">:</td>
+											<td>
+												<select
+													th:field="${ingredient.allergyIdList[__${st2.index}__].allergyId}"
+													class="form-control i1 i2">
+													<option value="">select</option>
+													<option th:each="allergy : ${allergyList}" th:value="${allergy.id}"
+														th:selected="${allergy.id == ingredientsAllergies.allergyId}"
+														th:text="${allergy.name}"></option>
+												</select>
+												<small class="error-message"
+													th:errors="${ingredient.allergyIdList[__${st2.index}__].allergyId}"></small>
+											</td>
+											<td>
+												<button type="button" onclick="onDeleteButtonClick(this)"
+													class="btn-allergyMinus">-</button>
+											</td>
+										</tr>
+										
+
+										<tr class="allergyId">
+											<td class="agNum">:</td>
+											<td>
+												<select
+													th:field="${ingredient.allergyIdList[10].allergyId}"
+													class="form-control i1 i2">
+													<option value="">select</option>
+													<option th:each="allergy : ${allergyList}" th:value="${allergy.id}"
+														th:text="${allergy.name}"></option>
+												</select>
+												<small class="error-message"
+													th:errors="${ingredient.allergyIdList[10].allergyId}"></small>
+											</td>
+											<td>
+												<button type="button" onclick="onDeleteButtonClick(this)"
+													class="btn-allergyMinus">-</button>
+											</td>
+										</tr>
+										
+
+										<tr>
+											<td colspan="2"><small class="error-message"></small></td>
+											<td>
+												<button type="button" onclick="addRow(this)"
+													class="btn-allergyPlus">+</button>
+											</td>
+										</tr>
+									</table>
+								</div>
+
+								<div class="text-center my-5">
+									<input type="submit" value="保存" class="btn-save">
+								</div>
+
+							</div>
+
+						</main>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+
+	<!-- 右側から表示されるOffcanvasメニュー -->
+	<div th:replace="~{system/parts/common :: offcanvasMenu()}"></div>
+	<th:block th:replace="~{system/parts/common :: javascripts()}"></th:block>
+
+	<script>
+		
+	var maxRows = 10; // 追加可能な最大行数
+
+function addRow(button) {
+    var table = button.closest('.table.addIngredient');
+    var rowCount = table.rows.length;
+
+    if (rowCount < maxRows) {
+        var row = table.getElementsByTagName('tr')[rowCount - 2];
+
+        const select = row.querySelector('.i2');
+        const nameAttribute = select.getAttribute('name');
+
+        // 現在のインデックスを取得
+        var currentIndex = parseInt(nameAttribute.match(/\[(\d+)\]/)[1]);
+
+        // 新しい行を複製
+        const content = row.cloneNode(true);
+
+        // 新しい行のインデックスを設定
+        const i1Elements = content.querySelectorAll('.i1');
+        i1Elements.forEach((element, index) => {
+            let name = element.getAttribute('name');
+            const regex = /(\[)(\d+)(\]\.allergyId)/;
+
+            // 新しいインデックスを設定
+            name = name.replace(regex, `[${currentIndex + index + 1}].allergyId`);
+
+            element.setAttribute('name', name);
+            element.setAttribute('id', `allergyIdList[${currentIndex + index + 1}].allergyId`);
+            const i1Elements = content.querySelectorAll('.i1');
+					const newInputs = content.querySelectorAll('td input'); // newInputs をここで定義する
+
+					// ここで新しい行のselect要素の選択をリセットする
+					const select = content.querySelector('.i2');
+					select.selectedIndex = 0; // 最初のオプションを選択状態にする
+
+					newInputs.forEach(input => {
+						if (input.tagName === 'SELECT') {
+							input.value = ''; // select 要素の場合、選択をリセットする
+						} else {
+							input.value = ''; // それ以外の input 要素の場合、値を空にする
+						}
+					});
+				});
+
+				// 新しい行に含まれる<input type="hidden">を削除
+				const hiddenInput = content.querySelector('input[type=hidden]');
+				if (hiddenInput) {
+					hiddenInput.parentNode.removeChild(hiddenInput);
+				}
+				row.parentElement.insertBefore(content, row.nextSibling);
+			} else {
+				alert("最大行数に達しました。");
+			}
+		}
+
+
+
+		function onDeleteButtonClick(button) {
+			var row = button.parentElement.parentElement; // ボタンの親要素（tr要素）を取得
+			var allAllergyIdRows = Array.from(row.parentElement.querySelectorAll('.allergyId'));
+
+			// 最後のallergyIdを持つ行でない場合に行を削除する
+			if (allAllergyIdRows.length > 1) {
+				row.parentElement.removeChild(row); // 該当する行を削除
+			} else {
+				alert("最後の行は削除できません。");
+			}
+		}
+
+	</script>
+</body>
+
+</html>
+
+

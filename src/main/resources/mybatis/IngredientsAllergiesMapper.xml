@@ -2,14 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.example.app.mapper.IngredientsAllergiesMapper">
-	
+
+	<select id="selectById" resultType="IngredientsAllergies">
+
+		SELECT
+		ingredients_allergies.id,
+		ingredients_allergies.ingredient_id,
+		ingredients_allergies.allergy_id
+		FROM ingredients_allergies
+		WHERE id =
+		#{id}
+
+	</select>
+
+	<select id="selectByingredientId" resultType="IngredientsAllergies">
+
+		SELECT
+		ingredients_allergies.id,
+		ingredients_allergies.ingredient_id,
+		ingredients_allergies.allergy_id
+		FROM ingredients_allergies
+		WHERE ingredient_id = #{id}
+
+	</select>
+
 	<insert id="insert" parameterType="IngredientsAllergies">
 
 		INSERT INTO
 		ingredients_allergies(ingredient_id, allergy_id)
-		VALUES (#{ingredientId},
+		VALUES
+		(#{ingredientId},
 		#{allergyId})
 
 	</insert>
+
+	<update id="update" parameterType="int">
+
+		UPDATE
+		ingredients_allergies
+		SET allergy_id = #{allergyId}
+		WHERE id = #{id}
+
+	</update>
+
+	<delete id="deleteById">
+
+		DELETE
+		FROM ingredients_allergies
+		WHERE id = #{id}
+
+	</delete>
 
 </mapper>

@@ -21,7 +21,6 @@ public interface IngredientMapper {
 	//	selectフォーム用のList
 	List<Ingredient> selectIngredientFoodCat() throws Exception;
 	
-	
 	// ページネーション
 	Long count() throws Exception;
 
