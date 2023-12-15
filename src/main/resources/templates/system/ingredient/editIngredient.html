@@ -14,6 +14,7 @@
 			<div class="row">
 				<nav th:replace="~{system/parts/common :: sideMenu()}" id="sidebar"
 					class="col-lg-3 position-fixed d-none d-lg-block"></nav>
+					
 				<div class="container-fluid">
 					<div class="row">
 
@@ -28,6 +29,12 @@
 
 								<div class="table-responsive-sm">
 									<table class="table addIngredient mt-4">
+										<tr>
+											<td colspan="4" class="text-end">
+												更新者：user　更新日時：[[${#dates.format(ingredient.created,'yy/MM/dd/E HH:mm:ss')}]]
+											</td>
+											
+										</tr>
 										<tr>
 											<th>ID：</th>
 											<td colspan="2" th:text="${ingredient.id}"></td>
