@@ -3,7 +3,6 @@ package com.example.app.service;
 import java.util.List;
 
 import com.example.app.domain.Order;
-import com.example.app.domain.OrderForm;
 
 public interface OrderService {
 
@@ -13,7 +12,7 @@ public interface OrderService {
 
 	void deleteOrderById(Integer id) throws Exception;
 
-	void addOrder(OrderForm orderForm) throws Exception;
+	void addOrder(Order order) throws Exception;
 
 	void editOrder(Order order) throws Exception;
 

@@ -19,6 +19,9 @@ public interface OrderMapper {
 	
 	void update(Order order) throws Exception;
 	
+	//	Nullリスト
+	List<Order> selectNull()throws Exception;
+	
 	//	詳細ページ用のリスト
 	List<Order> selectOrderDetailById(Integer id)throws Exception;
 	

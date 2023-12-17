@@ -3,9 +3,20 @@
 
 <mapper namespace="com.example.app.mapper.OrderMapper">
 
+	<resultMap id="joinedResult" type="Order" autoMapping="true">
+		<id property="id" column="id" />
+		<collection property="ingredientIdList" ofType="Detail"
+			autoMapping="true">
+			<id property="id" column="detail_id" />
+			<result property="orderId" column="order_id" />
+			<result property="ingredientId" column="ingredient_id" />
+		</collection>
+	</resultMap>
+
 	<select id="selectAll" resultType="Order">
 		SELECT
-		orders.id, orders.name, orders.kana, orders.price,
+		orders.id, orders.name,
+		orders.kana, orders.price,
 		orders.img, orders.note, orders.created,
 		IFNULL(
 		GROUP_CONCAT(
@@ -15,116 +26,120 @@
 		SELECT
 		GROUP_CONCAT(ingredient.name SEPARATOR ',')
 		FROM detail
-		JOIN ingredient ON detail.ingredient_id = ingredient.id
-		JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
-		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
-		WHERE detail.orders_id = orders.id
+		JOIN ingredient
+		ON detail.ingredient_id = ingredient.id
+		JOIN ingredients_allergies ON
+		ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat
+		ON ingredient.food_cat_id = food_cat.id
+		WHERE detail.orders_id =
+		orders.id
 		AND ingredients_allergies.allergy_id = allergy.id
 		)
 		) SEPARATOR
 		' | ' ), 'No Allergy') AS
 		allergy_and_ingredient,
 		GROUP_CONCAT(ingredient.name SEPARATOR '\n') AS ingredientName
-		FROM orders
+		FROM
+		orders
 		JOIN detail ON orders.id = detail.orders_id
-		LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
-		LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
-		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
-		LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
+		LEFT JOIN ingredient
+		ON detail.ingredient_id = ingredient.id
+		LEFT JOIN ingredients_allergies
+		ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN
+		food_cat ON ingredient.food_cat_id = food_cat.id
+		LEFT JOIN allergy ON
+		ingredients_allergies.allergy_id = allergy.id
 		GROUP BY orders.id,
 		orders.name, orders.kana, orders.img, orders.note, orders.created
 		ORDER BY orders.id ASC;
 	</select>
 
-	<select id="selectById" parameterType="int" resultType="Order">
-	
+	<select id="selectById" parameterType="int"
+		resultMap="joinedResult">
 		SELECT
-		orders.id, orders.name, orders.kana, orders.price,
-		orders.img, orders.note, orders.created,
-		IFNULL(
-		GROUP_CONCAT(
-		DISTINCT CONCAT(
-		allergy.name, ' : ',
-		(
-		SELECT
-		GROUP_CONCAT(ingredient.name SEPARATOR ',')
-		FROM detail
-		JOIN ingredient ON detail.ingredient_id = ingredient.id
-		JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
-		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
-		WHERE detail.orders_id = orders.id
-		AND ingredients_allergies.allergy_id = allergy.id
-		)
-		) SEPARATOR
-		' | ' ), 'No Allergy') AS
-		allergy_and_ingredient,
-		GROUP_CONCAT(ingredient.name SEPARATOR '\n') AS ingredientName
+		orders.id,
+		orders.name,
+		orders.kana,
+		orders.price,
+		orders.img,
+		orders.note,
+		orders.created,
+		detail.id AS detail_id,
+		detail.orders_id,
+		detail.ingredient_id,
+		ingredient.name AS ingredient_name,
+		IFNULL(allergy.name, 'no allergy') AS allergy_name
 		FROM orders
-		JOIN detail ON orders.id = detail.orders_id
-		LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
-		LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
-		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
-		LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
+		JOIN
+		detail ON orders.id = detail.orders_id
+		LEFT JOIN ingredients_allergies
+		ON detail.ingredient_id =
+		ingredients_allergies.ingredient_id
+		LEFT JOIN
+		ingredient ON
+		detail.ingredient_id = ingredient.id
+		LEFT JOIN allergy ON
+		ingredients_allergies.allergy_id = allergy.id
 		WHERE orders.id = #{id}
-		GROUP BY orders.id,
-		orders.name, orders.kana, orders.img, orders.note, orders.created
-		ORDER BY orders.id ASC;
-	
+		ORDER BY CASE WHEN ingredient.name IS NULL THEN 'A' ELSE 'B' END,
+		allergy.id DESC
 	</select>
 
-	<delete id="deleteById" parameterType="int"></delete>
+	<delete id="deleteById" parameterType="int">
+		DELETE FROM orders
+		WHERE id
+		= #{id}
+	</delete>
+
+	<update id="update" parameterType="Order">
+		UPDATE orders
+		SET name = #{name},
+		kana = #{kana},
+		price = #{price}, img = #{img}, note = #{note}
+		WHERE id
+		= #{id}
+	</update>
 
 	<insert id="insert" parameterType="Order"
 		useGeneratedKeys="true" keyProperty="id">
-
 		INSERT INTO orders (name, kana,
 		price, img, note)
 		VALUES(#{name}, #{kana}, #{price}, #{img}, #{note})
-
 	</insert>
 
-
-	<update id="update" parameterType="Order"></update>
-
-
-	<!-- detai用 -->
-<!-- 	<select id="selectOrderDetailById" parameterType="int"
+	<select id="selectOrderDetailById" parameterType="int"
 		resultType="Order">
-
 		SELECT
-		ingredient.name AS ingredient_name,
-		IFNULL(GROUP_CONCAT(allergy.name SEPARATOR ', '), 'no allergy') AS allergies
+		CASE
+		WHEN detail.ingredient_id IS NULL THEN NULL
+		ELSE ingredient.name
+		END AS ingredient_name,
+		CASE
+		WHEN detail.ingredient_id IS NULL THEN NULL
+		ELSE IFNULL(GROUP_CONCAT(allergy.name SEPARATOR ', '), 'no allergy')
+		END AS allergies
 		FROM orders
-		JOIN detail ON orders.id = detail.orders_id
-		JOIN ingredient ON detail.ingredient_id = ingredient.id
-		LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
+		LEFT JOIN detail ON orders.id = detail.orders_id
+		LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
+		LEFT JOIN ingredients_allergies ON ingredient.id =
+		ingredients_allergies.ingredient_id
 		LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
 		WHERE orders.id = #{id}
-		GROUP BY ingredient.id
-
-	</select> -->
+		GROUP BY detail.id
+	</select>
 	
-	
-	<select id="selectOrderDetailById" parameterType="int" resultType="Order">
-    SELECT
-        CASE 
-            WHEN detail.ingredient_id IS NULL THEN NULL
-            ELSE ingredient.name
-        END AS ingredient_name,
-        CASE 
-            WHEN detail.ingredient_id IS NULL THEN NULL
-            ELSE IFNULL(GROUP_CONCAT(allergy.name SEPARATOR ', '), 'no allergy')
-        END AS allergies
-    FROM orders
-    LEFT JOIN detail ON orders.id = detail.orders_id
-    LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
-    LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
-    LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
-    WHERE orders.id = #{id}
-    GROUP BY detail.id
-</select>
-	
-	
+	<!-- Null表示 -->
+	<select id="selectNull" resultType="Order">
+		SELECT
+		orders.id,
+		orders.name
+		FROM orders
+		LEFT JOIN detail ON orders.id = detail.orders_id
+		WHERE
+		detail.ingredient_id IS NULL
+	</select>
 
 	<!-- ページネーション -->
 	<select id="count" resultType="long">
@@ -133,10 +148,10 @@
 
 	<!-- ページネーション -->
 	<select id="selectLimited" resultType="Order">
-	
 		SELECT
 		orders.id, orders.name, orders.kana, orders.price,
-		orders.img, orders.note, orders.created,
+		orders.img,
+		orders.note, orders.created,
 		IFNULL(
 		GROUP_CONCAT(
 		DISTINCT CONCAT(
@@ -146,26 +161,35 @@
 		GROUP_CONCAT(ingredient.name SEPARATOR ',')
 		FROM detail
 		JOIN ingredient ON detail.ingredient_id = ingredient.id
-		JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
-		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
+		JOIN ingredients_allergies ON ingredient.id =
+		ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat ON
+		ingredient.food_cat_id = food_cat.id
 		WHERE detail.orders_id = orders.id
 		AND ingredients_allergies.allergy_id = allergy.id
 		)
 		) SEPARATOR
-		' | ' ), 'No Allergy') AS
+		' | ' ),
+		'No Allergy') AS
 		allergy_and_ingredient,
-		GROUP_CONCAT(ingredient.name SEPARATOR '\n') AS ingredientName
+		GROUP_CONCAT(ingredient.name
+		SEPARATOR '\n') AS ingredientName
 		FROM orders
-		JOIN detail ON orders.id = detail.orders_id
-		LEFT JOIN ingredient ON detail.ingredient_id = ingredient.id
-		LEFT JOIN ingredients_allergies ON ingredient.id = ingredients_allergies.ingredient_id
-		LEFT JOIN food_cat ON ingredient.food_cat_id = food_cat.id
-		LEFT JOIN allergy ON ingredients_allergies.allergy_id = allergy.id
+		JOIN detail ON orders.id =
+		detail.orders_id
+		LEFT JOIN ingredient ON detail.ingredient_id =
+		ingredient.id
+		LEFT JOIN ingredients_allergies ON ingredient.id =
+		ingredients_allergies.ingredient_id
+		LEFT JOIN food_cat ON
+		ingredient.food_cat_id = food_cat.id
+		LEFT JOIN allergy ON
+		ingredients_allergies.allergy_id = allergy.id
 		GROUP BY orders.id,
 		orders.name, orders.kana, orders.img, orders.note, orders.created
 		ORDER BY orders.id ASC
 		LIMIT #{offset}, #{numPerPage}
-		
+
 	</select>
 
 

@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.app.domain.Detail;
 import com.example.app.domain.Order;
-import com.example.app.domain.OrderForm;
 import com.example.app.mapper.DetailMapper;
 import com.example.app.mapper.OrderMapper;
 
@@ -40,31 +39,31 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public void addOrder(OrderForm orderForm) throws Exception {
+	public void addOrder(Order order) throws Exception {
 
-		Order order = new Order();
-		order.setName(orderForm.getName());
-		order.setKana(orderForm.getKana());
-		order.setPrice(orderForm.getPrice());
-		order.setNote(orderForm.getNote());
+		Order newOrder = new Order();
+		newOrder.setName(order.getName());
+		newOrder.setKana(order.getKana());
+		newOrder.setPrice(order.getPrice());
+		newOrder.setNote(order.getNote());
 
-		MultipartFile upfile = orderForm.getUpfile();
+		MultipartFile upfile = order.getUpfile();
 		if (!upfile.isEmpty()) {
 			String img = upfile.getOriginalFilename();
-			order.setImg(img);
+			newOrder.setImg(img);
 			File dest = new File("/Users/zoomohe/Desktop/gallery/"+ img);
 			upfile.transferTo(dest);
 		}
 
-		orderMapper.insert(order);
+		orderMapper.insert(newOrder);
 
-		for (Detail ingredientId : orderForm.getIngredientIdList()) {
+		for (Detail ingredientId : order.getIngredientIdList()) {
 
 			Detail detail = new Detail();
-			detail.setOrdersId(order.getId());
+			detail.setOrdersId(newOrder.getId());
 			detail.setIngredientId(ingredientId.getId());
 
-			detailMapper.insert(order.getId(), ingredientId.getId());
+			detailMapper.insert(newOrder.getId(), ingredientId.getId());
 
 		}
 
@@ -78,7 +77,6 @@ public class OrderServiceImpl implements OrderService {
 	//	詳細ページ用
 	@Override
 	public List<Order> getOrderDetailById(Integer id) throws Exception {
-
 		return orderMapper.selectOrderDetailById(id);
 	}
 
