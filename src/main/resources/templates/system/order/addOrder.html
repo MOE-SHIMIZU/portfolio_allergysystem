@@ -131,98 +131,95 @@
 
 	<!-- 右側から表示されるOffcanvasメニュー -->
 	<div th:replace="~{system/parts/common :: offcanvasMenu()}"></div>
+	
 	<th:block th:replace="~{system/parts/common :: javascripts()}"></th:block>
 
-	<script>
-		$(function () {
-			const btn_clone = $(".btn-clone");
+	<script th:inline="javascript">
 
-			btn_clone.click(function () {
-				const lastRowIndex = $(".inputFields").length - 1;
-				const clonedFields = $(".inputFields").eq(lastRowIndex).clone();
+		$(document).on("click", ".btn-remove", function () {
+			const row = $(this).closest("tr");
+			if (row.siblings().length > 1) {
+				row.remove();
+			} else {
+				alert("最後の行は削除できません。");
+			}
+		});
 
-				clonedFields.find(".allergyRow").each(
-					function (index) {
-						const name = $(this).attr("name");
+		$(document).ready(function () {
+			function disableSecondSelect() {
+				$('.inputFields').each(function () {
+					const currentRow = $(this);
+					const secondSelect = currentRow.find('.second');
+					secondSelect.prop('disabled', true);
+				});
+			}
 
-						const updatedName = name.replace(/\[(\d+)\]/g,
-							function (match, p1) {
-								const index = parseInt(p1) + lastRowIndex + 1;
-								return `[${index}]`;
-							});
+			// 初回の実行
+			disableSecondSelect();
 
-						$(this).attr("name", updatedName);
-						$(this).val("");
-					});
+			$(document).on('change', '.first', function () {
+				const selectedCategoryId = $(this).val();
+				const relatedSecondSelect = $(this).closest('.inputFields').find('.second');
 
-				clonedFields.find(".btn-remove").show();
-				clonedFields.find('select').val('');
-				$(this).closest(".btn-clone").closest("tr").before(clonedFields);
-			});
+				relatedSecondSelect.empty().prop('disabled', true);
 
-			$(document).on("click", ".btn-remove", function () {
-				const row = $(this).closest("tr");
-				if (row.siblings().length > 1) {
-					row.remove();
-				} else {
-					alert("最後の行は削除できません。");
+				if (selectedCategoryId !== "") {
+					relatedSecondSelect.empty().prop('disabled', false);
+					const ingredients = /*[[${ingredients}]]*/"ingredients";
+
+					if (ingredients) {
+						ingredients.forEach(function (ingredient) {
+							if (ingredient.foodCatId == selectedCategoryId) {
+								const option = $('<option></option>');
+								option.attr('value', ingredient.id);
+								option.text(ingredient.name);
+								relatedSecondSelect.append(option);
+							}
+						});
+					} else {
+						console.error('ingredients is null or undefined');
+					}
 				}
 			});
 
-		});
-	</script>
+			const btn_clone = $(".btn-clone");
 
-	<!-- ２つのselectテーブルの連携:start -->
-	<script th:inline="javascript">
-		$(document)
-			.ready(
-				function () {
-					const ingredients = /*[[${ingredients}]]*/"ingredients";
+			btn_clone.click(function () {
+				const lastIndex = $(".inputFields").length - 1;
+				console.log(lastIndex);
 
-					$('.first')
-						.click(
-							function () {
+				const inputFieldsElement = $("tr.inputFields:last");
+				console.log(inputFieldsElement);
 
-								var firstSelect = this;
+				const clonedFields = inputFieldsElement.clone(); // 最後の行を複製
 
-								var secondSelect = this.parentNode.parentNode
-									.querySelector('.second')
-									
+				const selectElement = clonedFields.find('.allergyRow');
 
-								var selectedCategoryId = this.value;
+				const nameAttributeValue = selectElement.attr('name');
+				console.log(nameAttributeValue);
+				const updatedName = nameAttributeValue.replace(/\[(\d+)\]/g, '[' + (lastIndex + 1) + ']');
+				console.log(updatedName);
+				selectElement.attr("name", updatedName);
 
-								while (secondSelect.firstChild) {
+				const idAttributeValue = selectElement.attr('id');
+				console.log(idAttributeValue);
+				const updatedId = idAttributeValue.replace(/(\d+)/g, lastIndex + 1);
+				console.log(updatedId);
+				selectElement.attr("id", updatedId);
 
-									secondSelect
-										.removeChild(secondSelect.firstChild);
-
-								}
-
-								ingredients
-									.forEach(function (
-										ingredient) {
-
-										if (ingredient.foodCatId == selectedCategoryId) {
-
-											var option = document
-												.createElement('option');
-
-											option.value = ingredient.id;
-
-											option.text = ingredient.name;
-
-											secondSelect
-												.appendChild(option);
-
-										}
-
-									});
-
-							});
-
+				// 選択をリセットするためにselect要素の選択を空にする
+				clonedFields.find('select').each(function () {
+					$(this).val('');
 				});
+				// 選択をリセットするためにselect要素の選択を空にし、disabledを追加する
+				clonedFields.find('.second').each(function () {
+					$(this).val('').prop('disabled', true);
+				});
+				$(this).closest("tr").before(clonedFields); // ボタンの直前に新しい行を追加
+			});
+		});
+
 	</script>
-	<!-- ２つのselectテーブルの連携:end -->
 
 </body>
 
