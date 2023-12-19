@@ -76,7 +76,7 @@
 												<tr class="allergyId">
 													<td class="agNum">：</td>
 													<td><select
-															th:field="*{ingredients[__${st.index}__].allergyIdList[__${st2.index}__].allergyId}"
+															th:field="*{ingredients[__${st.index}__].allergyIdList[__${st2.index}__].id}"
 															class="form-control i1 i2">
 															<option value="">select</option>
 															<th:block th:each="allergy : ${allergyList}">

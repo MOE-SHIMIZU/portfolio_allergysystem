@@ -5,7 +5,7 @@
 		<resultMap id="joinedResult" type="Ingredient"
 			autoMapping="true">
 			<id property="id" column="id" />
-			<collection property="allergyIdList"
+			<collection property="ingAgList"
 				ofType="IngredientsAllergies" autoMapping="true">
 				<id property="id" column="ingAg_id" />
 				<result property="allergyId" column="allergy_id" />
@@ -107,7 +107,7 @@
 			ingredients_allergies.allergy_id
 			GROUP BY ingredient.id, ingredient.name,
 			food_cat.name
-			ORDER BY ingredient.id ASC
+			ORDER BY ingredient.id DESC
 			LIMIT #{offset},#{numPerPage}
 		</select>
 

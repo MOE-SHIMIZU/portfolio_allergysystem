@@ -17,7 +17,7 @@ public class IngredientsAllergiesServiceImpl implements IngredientsAllergiesServ
 	private IngredientsAllergiesMapper ingAgMapper;
 	
 	@Override
-	public List<IngredientsAllergies> getIngredientsAllergiesById(Integer id) throws Exception {
+	public IngredientsAllergies getIngredientsAllergiesById(Integer id) throws Exception {
 		return ingAgMapper.selectById(id);
 	}
 	

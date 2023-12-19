@@ -6,7 +6,7 @@ import com.example.app.domain.IngredientsAllergies;
 
 public interface IngredientsAllergiesService {
 
-	List<IngredientsAllergies> getIngredientsAllergiesById(Integer id) throws Exception;
+	IngredientsAllergies getIngredientsAllergiesById(Integer id) throws Exception;
 
 	List<IngredientsAllergies> getAllergiesByIngredientId(Integer ingredientId) throws Exception;
 	

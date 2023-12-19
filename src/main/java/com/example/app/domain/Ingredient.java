@@ -34,8 +34,10 @@ public class Ingredient {
 	private String foodCatName;
 	private String allergyName;
 	
+	private List<Allergy> allergyIdList;
+	
 	//	ingredientsAllergies
-	private List<IngredientsAllergies> allergyIdList;
+	private List<IngredientsAllergies> ingAgList;
 	
 
 }

@@ -8,7 +8,7 @@ import com.example.app.domain.IngredientsAllergies;
 
 public interface IngredientsAllergiesMapper {
 
-	List<IngredientsAllergies> selectById(Integer id) throws Exception;
+	IngredientsAllergies selectById(Integer id) throws Exception;
 
 	List<IngredientsAllergies> selectByingredientId(Integer ingredientId) throws Exception;
 

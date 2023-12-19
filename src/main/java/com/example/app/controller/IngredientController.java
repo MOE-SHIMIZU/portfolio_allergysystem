@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.app.domain.Allergy;
 import com.example.app.domain.Ingredient;
-import com.example.app.domain.IngredientsAllergies;
 import com.example.app.domain.IngredientsForm;
 import com.example.app.service.AllergyService;
 import com.example.app.service.FoodCatService;
@@ -58,8 +58,8 @@ public class IngredientController {
 		IngredientsForm ingredientsForm = new IngredientsForm();
 		List<Ingredient> list = new ArrayList<>();
 		Ingredient ingredient = new Ingredient();
-		List<IngredientsAllergies> alist = new ArrayList<>();
-		IngredientsAllergies allergy = new IngredientsAllergies();
+		List<Allergy> alist = new ArrayList<>();
+		Allergy allergy = new Allergy();
 		alist.add(allergy);
 		alist.add(allergy);
 		ingredient.setAllergyIdList(alist);

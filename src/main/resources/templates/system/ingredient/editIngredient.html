@@ -14,7 +14,7 @@
 			<div class="row">
 				<nav th:replace="~{system/parts/common :: sideMenu()}" id="sidebar"
 					class="col-lg-3 position-fixed d-none d-lg-block"></nav>
-					
+
 				<div class="container-fluid">
 					<div class="row">
 
@@ -31,9 +31,10 @@
 									<table class="table addIngredient mt-4">
 										<tr>
 											<td colspan="4" class="text-end">
-												更新者：user　更新日時：[[${#dates.format(ingredient.created,'yy/MM/dd/E HH:mm:ss')}]]
+												更新者：user　更新日時：[[${#dates.format(ingredient.created,'yy/MM/dd/E
+												HH:mm:ss')}]]
 											</td>
-											
+
 										</tr>
 										<tr>
 											<th>ID：</th>
@@ -76,57 +77,57 @@
 												</div>
 											</td>
 										</tr>
-
-										<tr th:each="ingredientsAllergies, st2 : ${ingredient.allergyIdList}"
-											class="allergyId">
-											<input type="hidden" th:field="${ingredient.allergyIdList[__${st2.index}__].id}">
-											<td class="agNum">:</td>
-											<td>
-												<select
-													th:field="${ingredient.allergyIdList[__${st2.index}__].allergyId}"
-													class="form-control i1 i2">
-													<option value="">select</option>
-													<option th:each="allergy : ${allergyList}" th:value="${allergy.id}"
-														th:selected="${allergy.id == ingredientsAllergies.allergyId}"
-														th:text="${allergy.name}"></option>
-												</select>
-												<small class="error-message"
-													th:errors="${ingredient.allergyIdList[__${st2.index}__].allergyId}"></small>
-											</td>
-											<td>
-												<button type="button" onclick="onDeleteButtonClick(this)"
-													class="btn-allergyMinus">-</button>
-											</td>
-										</tr>
 										
-
-										<tr class="allergyId">
-											<td class="agNum">:</td>
-											<td>
-												<select
-													th:field="${ingredient.allergyIdList[10].allergyId}"
-													class="form-control i1 i2">
-													<option value="">select</option>
-													<option th:each="allergy : ${allergyList}" th:value="${allergy.id}"
-														th:text="${allergy.name}"></option>
-												</select>
-												<small class="error-message"
-													th:errors="${ingredient.allergyIdList[10].allergyId}"></small>
-											</td>
-											<td>
-												<button type="button" onclick="onDeleteButtonClick(this)"
-													class="btn-allergyMinus">-</button>
-											</td>
-										</tr>
+											<tr th:each="ingredientsAllergies, st2 : ${ingredient.ingAgList}"
+												class="allergyId">
+												<input type="hidden"
+													th:field="${ingredient.ingAgList[__${st2.index}__].id}">
+												<td class="agNum">:</td>
+												<td>
+													<select
+														th:field="${ingredient.ingAgList[__${st2.index}__].allergyId}"
+														class="form-control i1 i2">
+														<option value="">select</option>
+														<option th:each="allergy : ${allergyList}"
+															th:value="${allergy.id}"
+															th:selected="${allergy.id == ingredientsAllergies.allergyId}"
+															th:text="${allergy.name}"></option>
+													</select>
+													<small class="error-message"
+														th:errors="${ingredient.ingAgList[__${st2.index}__].allergyId}"></small>
+												</td>
+												<td>
+													<button type="button" onclick="onDeleteButtonClick(this)"
+														class="btn-allergyMinus">-</button>
+												</td>
+											</tr>
 										
+											<tr class="allergyId">
+												<td class="agNum">:</td>
+												<td>
+													<select th:field="${ingredient.ingAgList[].allergyId}"
+														class="form-control i1 i2">
+														<option value="">select</option>
+														<option th:each="allergy : ${allergyList}"
+															th:value="${allergy.id}" th:text="${allergy.name}"></option>
+													</select>
+													<small class="error-message"
+														th:errors="${ingredient.ingAgList[].allergyId}"></small>
+												</td>
+												<td>
+													<button type="button" onclick="onDeleteButtonClick(this)"
+														class="btn-allergyMinus">-</button>
+												</td>
+											</tr>
 
-										<tr>
-											<td colspan="2"><small class="error-message"></small></td>
-											<td>
-												<button type="button" onclick="addRow(this)"
-													class="btn-allergyPlus">+</button>
-											</td>
-										</tr>
+											<tr>
+												<td colspan="2"><small class="error-message"></small></td>
+												<td>
+													<button type="button" onclick="addRow(this)"
+														class="btn-allergyPlus">+</button>
+												</td>
+											</tr>
+										
 									</table>
 								</div>
 
@@ -149,37 +150,53 @@
 	<th:block th:replace="~{system/parts/common :: javascripts()}"></th:block>
 
 	<script>
-		
-	var maxRows = 12; // 追加可能な最大行数
 
-function addRow(button) {
-    var table = button.closest('.table.addIngredient');
-    var rowCount = table.rows.length;
+		var maxRows = 12; // 追加可能な最大行数
 
-    if (rowCount < maxRows) {
-        var row = table.getElementsByTagName('tr')[rowCount - 2];
+		// JavaScriptで0から始まるインデックスを生成し、Thymeleafの式に組み込む
+		var table = document.querySelector('.addIngredient'); // テーブルのクラス名を指定して取得
+		var rows = table.querySelectorAll('tr.allergyId');
 
-        const select = row.querySelector('.i2');
-        const nameAttribute = select.getAttribute('name');
+		rows.forEach(function (row, index) {
+			// インデックスを0から始めるためにindexに1を加える
+			var thymeleafIndex = index + 1;
 
-        // 現在のインデックスを取得
-        var currentIndex = parseInt(nameAttribute.match(/\[(\d+)\]/)[1]);
+			// Thymeleafの式に組み込む
+			var thymeleafExpression = '${ingredient.ingAgList[' + index + '].allergyId}';
 
-        // 新しい行を複製
-        const content = row.cloneNode(true);
+			// 例としてコンソールに表示する
+			console.log(thymeleafIndex, thymeleafExpression);
+		});
 
-        // 新しい行のインデックスを設定
-        const i1Elements = content.querySelectorAll('.i1');
-        i1Elements.forEach((element, index) => {
-            let name = element.getAttribute('name');
-            const regex = /(\[)(\d+)(\]\.allergyId)/;
 
-            // 新しいインデックスを設定
-            name = name.replace(regex, `[${currentIndex + index + 1}].allergyId`);
+		function addRow(button) {
+			var table = button.closest('.table.addIngredient');
+			var rowCount = table.rows.length;
 
-            element.setAttribute('name', name);
-            element.setAttribute('id', `allergyIdList[${currentIndex + index + 1}].allergyId`);
-            const i1Elements = content.querySelectorAll('.i1');
+			if (rowCount < maxRows) {
+				var row = table.getElementsByTagName('tr')[rowCount - 2];
+
+				const select = row.querySelector('.i2');
+				const nameAttribute = select.getAttribute('name');
+
+				// 現在のインデックスを取得
+				var currentIndex = parseInt(nameAttribute.match(/\[(\d+)\]/)[1]);
+
+				// 新しい行を複製
+				const content = row.cloneNode(true);
+
+				// 新しい行のインデックスを設定
+				const i1Elements = content.querySelectorAll('.i1');
+				i1Elements.forEach((element, index) => {
+					let name = element.getAttribute('name');
+					const regex = /(\[)(\d+)(\]\.allergyId)/;
+
+					// 新しいインデックスを設定
+					name = name.replace(regex, `[${currentIndex + index + 1}].allergyId`);
+
+					element.setAttribute('name', name);
+					element.setAttribute('id', `ingAgList[${currentIndex + index + 1}].allergyId`);
+					const i1Elements = content.querySelectorAll('.i1');
 					const newInputs = content.querySelectorAll('td input'); // newInputs をここで定義する
 
 					// ここで新しい行のselect要素の選択をリセットする
@@ -224,5 +241,3 @@ function addRow(button) {
 </body>
 
 </html>
-
-

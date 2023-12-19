@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.app.domain.Allergy;
 import com.example.app.domain.Ingredient;
 import com.example.app.domain.IngredientsAllergies;
 import com.example.app.domain.IngredientsForm;
@@ -55,15 +56,15 @@ public class IngredientServiceImpl implements IngredientService {
 
 				ingredientMapper.insert(ingredient);
 
-				List<IngredientsAllergies> allergyList = inge.getAllergyIdList();
-				for (IngredientsAllergies allergy : allergyList) {
-
+				List<Allergy> allergyList = inge.getAllergyIdList();
+				for (Allergy allergy : allergyList) {
+System.out.println("allegy"+allergy);
 					if (allergy.getId() != null) {
 						IngredientsAllergies ingAg = new IngredientsAllergies();
 						ingAg.setIngredientId(ingredient.getId());
-						ingAg.setAllergyId(allergy.getAllergyId());
+						ingAg.setAllergyId(allergy.getId());
 
-						ingAgMapper.insert(ingAg.getIngredientId(), ingAg.getAllergyId());
+						ingAgMapper.insert(ingredient.getId(),allergy.getId());
 					}
 				}
 
@@ -83,7 +84,7 @@ public class IngredientServiceImpl implements IngredientService {
 		newIng.setFoodCatId(ingredient.getFoodCatId());
 		ingredientMapper.update(newIng);
 
-		List<IngredientsAllergies> allergyList = ingredient.getAllergyIdList();
+		List<IngredientsAllergies> allergyList = ingredient.getIngAgList();
 		List<IngredientsAllergies> newIngAgList = new ArrayList<>();
 		if (allergyList != null) {
 			for (IngredientsAllergies allergy : allergyList) {
@@ -128,14 +129,10 @@ public class IngredientServiceImpl implements IngredientService {
 				ingAgMapper.insert(newIng.getId(), newIngAg.getAllergyId());
 			} else {
 				// newIngAgList内のIDがnullでない場合、既存のレコードを更新
-				List<IngredientsAllergies> oldIngAgList2 = ingAgMapper.selectById(newIngAg.getId());
-				for (IngredientsAllergies oldIngAg2 : oldIngAgList2) {
-
+				IngredientsAllergies oldIngAg2 = ingAgMapper.selectById(newIngAg.getId());
 					if (!newIngAg.getAllergyId().equals(oldIngAg2.getAllergyId())) {
+						ingAgMapper.update(newIngAg);
 					}
-
-					ingAgMapper.update(newIngAg);
-				}
 			}
 		}
 
