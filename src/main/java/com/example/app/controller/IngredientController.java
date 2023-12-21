@@ -63,6 +63,7 @@ public class IngredientController {
 		alist.add(allergy);
 		alist.add(allergy);
 		ingredient.setAllergyIdList(alist);
+		
 		list.add(ingredient);
 		list.add(ingredient);
 		list.add(ingredient);
@@ -162,7 +163,7 @@ public class IngredientController {
 		}
 
 		ingredientService.editIngredient(ingredient);
-		ra.addFlashAttribute("statusMessage", "食材項目を更新しました");
+		ra.addFlashAttribute("statusMessage", "「食材項目" + ingredient.getId() + "：" + ingredient.getName() + "」を更新しました");
 		return "redirect:/ingredient";
 	}
 

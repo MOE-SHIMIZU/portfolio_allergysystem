@@ -77,42 +77,42 @@
 												</div>
 											</td>
 										</tr>
-										
-											<tr th:each="ingredientsAllergies, st2 : ${ingredient.ingAgList}"
-												class="allergyId">
-												<input type="hidden"
-													th:field="${ingredient.ingAgList[__${st2.index}__].id}">
+
+										<tr th:each="ingredientsAllergies, st2 : ${ingredient.ingAgList}"
+											class="allergyId">
+											<input type="hidden"
+												th:field="${ingredient.ingAgList[__${st2.index}__].id}">
+											<td class="agNum">:</td>
+											<td>
+												<select th:field="${ingredient.ingAgList[__${st2.index}__].allergyId}"
+													class="form-control i1 i2">
+													<option value="">select</option>
+													<option th:each="allergy : ${allergyList}" th:value="${allergy.id}"
+														th:selected="${allergy.id == ingredientsAllergies.allergyId}"
+														th:text="${allergy.name}"></option>
+												</select>
+												<small class="error-message"
+													th:errors="${ingredient.ingAgList[__${st2.index}__].allergyId}"></small>
+											</td>
+											<td>
+												<button type="button" onclick="onDeleteButtonClick(this)"
+													class="btn-allergyMinus">-</button>
+											</td>
+										</tr>
+
+										<th:block
+											th:if="${ingredient.ingAgList != null and ingredient.ingAgList.size() == 0}">
+											<tr class="allergyId" th:each="index : ${#numbers.sequence(0, 2)}">
 												<td class="agNum">:</td>
 												<td>
-													<select
-														th:field="${ingredient.ingAgList[__${st2.index}__].allergyId}"
-														class="form-control i1 i2">
-														<option value="">select</option>
-														<option th:each="allergy : ${allergyList}"
-															th:value="${allergy.id}"
-															th:selected="${allergy.id == ingredientsAllergies.allergyId}"
-															th:text="${allergy.name}"></option>
-													</select>
-													<small class="error-message"
-														th:errors="${ingredient.ingAgList[__${st2.index}__].allergyId}"></small>
-												</td>
-												<td>
-													<button type="button" onclick="onDeleteButtonClick(this)"
-														class="btn-allergyMinus">-</button>
-												</td>
-											</tr>
-										
-											<tr class="allergyId">
-												<td class="agNum">:</td>
-												<td>
-													<select th:field="${ingredient.ingAgList[].allergyId}"
+													<select th:field="${ingredient.ingAgList[__${index}__].allergyId}"
 														class="form-control i1 i2">
 														<option value="">select</option>
 														<option th:each="allergy : ${allergyList}"
 															th:value="${allergy.id}" th:text="${allergy.name}"></option>
 													</select>
 													<small class="error-message"
-														th:errors="${ingredient.ingAgList[].allergyId}"></small>
+														th:errors="${ingredient.ingAgList[__${index}__].allergyId}"></small>
 												</td>
 												<td>
 													<button type="button" onclick="onDeleteButtonClick(this)"
@@ -120,14 +120,15 @@
 												</td>
 											</tr>
 
-											<tr>
-												<td colspan="2"><small class="error-message"></small></td>
-												<td>
-													<button type="button" onclick="addRow(this)"
-														class="btn-allergyPlus">+</button>
-												</td>
-											</tr>
-										
+										</th:block>
+										<tr>
+											<td colspan="2"><small class="error-message"></small></td>
+											<td>
+												<button type="button" onclick="addRow(this)"
+													class="btn-allergyPlus">+</button>
+											</td>
+										</tr>
+
 									</table>
 								</div>
 
